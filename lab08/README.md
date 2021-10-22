@@ -1,4 +1,6 @@
-# Equipe Brazilian Research of Atmosphere Towards Health - BReATH
+# Lab08 - Modelo Lógico e Análise de Dados em Grafos
+
+## Equipe Brazilian Research of Atmosphere Towards Health - BReATH
 * Gabriel Costa Kinder - 234720
 * Elton Cardoso do Nascimento - 233840
 * João Pedro de Moraes Bonucci - 218733
@@ -18,6 +20,5 @@
     * Ao assumir que teremos um grafo bipartido que relaciona estados climáticos com sintomas podemos procurar pelas maiores centralidades dentre os estados climáticos. Existindo algum padrão de variação onde uma específica mudança aparece múltiplas vezes nestes nós centrais poderemos concluir sua relação entre a causa destes sintomas.
 
 ### Pergunta/Análise 3
-> * É possível antecipar flutuações no número de casos de doenças respiratórias a partir da previsão do tempo?
->   
->   * Explicação sucinta da análise que será feita no grafo para atender à pergunta. Deve ser indicado explicitamente em qual das modalidades a análise se encaixa: centralidade; vulnerabilidade; comunidade/modularidade; motifs; predição de links.
+* É possível antecipar flutuações no número de casos de doenças respiratórias a partir da previsão do tempo?
+   * Assumindo que tal relação exista, podemos, ao obter um novo dado relacionado a um estado climático, utilizar uma técnica de predição de links para antecipar, em média, a quantia e os sintomas que serão apresentados durante os próximos dias nas estações de saúde de uma localização geográfica específica.
