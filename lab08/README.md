@@ -9,16 +9,16 @@
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
 ### Pergunta/Análise 1
-> * Pergunta 1
+> * Probabilidade de infecção esta relacionada com local da residencia? | Existe um aumento de casos em determinada estação do ano?
 >   
 >   * Explicação sucinta da análise que será feita no grafo para atender à pergunta. Deve ser indicado explicitamente em qual das modalidades a análise se encaixa: centralidade; vulnerabilidade; comunidade/modularidade; motifs; predição de links.
 
 ### Pergunta/Análise 2
-> * Pergunta 2
+> * Alterações do tempo atmosférico influenciam no conjunto de sintomas mais comuns de algumas doenças respiratórias
 >   
 >   * Explicação sucinta da análise que será feita no grafo para atender à pergunta. Deve ser indicado explicitamente em qual das modalidades a análise se encaixa: centralidade; vulnerabilidade; comunidade/modularidade; motifs; predição de links.
 
 ### Pergunta/Análise 3
-> * Pergunta 3
+> * É possível antecipar flutuações no número de casos de doenças respiratórias a partir da previsão do tempo?
 >   
 >   * Explicação sucinta da análise que será feita no grafo para atender à pergunta. Deve ser indicado explicitamente em qual das modalidades a análise se encaixa: centralidade; vulnerabilidade; comunidade/modularidade; motifs; predição de links.
