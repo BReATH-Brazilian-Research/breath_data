@@ -31,11 +31,10 @@ class RelationalQuerier:
 
 			# create table usuarios
 		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Usuarios(
-					name TEXT,
-					nome TEXT,
+					Nome TEXT,
 					id INT,
 					laudo TEXT,
-					idade INT,
+					Idade INT,
 					estado_civil TEXT)""")
 			
 			# commit changes

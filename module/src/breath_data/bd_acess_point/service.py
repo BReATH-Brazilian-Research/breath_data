@@ -39,6 +39,8 @@ class BDAcessPoint(Service):
 
         if request.operation_name == "register_symptom":
             response = self._register_symptom(request)
+        elif request.operation_name == "register_user":
+            response = self._register_user(request)
 
         request.send_response(response)
 
@@ -50,6 +52,20 @@ class BDAcessPoint(Service):
     def _commit_all(self):
         self.relational_querier.commit()
         self.graph_querier.commit()
+
+    def _register_user(self, request:Request) -> Response:
+        nome = request.request_info["name"]
+
+        sql_query = "INSERT INTO Usuarios(Nome) VALUES('{0}')".format(nome)
+
+        sucess, users = self.relational_querier.query(sql_query)
+
+        if not sucess:
+            return Response(sucess=False, response_data={"message":"Cannot create user"})
+        
+        user_id = users[0]["id"]
+
+        return Response(sucess=True, response_data={"user_id":user_id})
 
     def _register_symptom(self, request: Request) -> Response:
         
