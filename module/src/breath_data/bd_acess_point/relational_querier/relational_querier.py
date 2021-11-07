@@ -1,16 +1,17 @@
 import sqlite3
+from sqlite3.dbapi2 import Cursor, Connection
 from typing import Dict, List, Tuple, Union
 
 class RelationalQuerier:
-	conn = None
-	c = None
+	conn : Connection = None
+	c : Cursor = None
 
 	def __init__(self):
 		# temporary database
 		#self.conn = sqlite3.self.connect(':memory:')
 
 		# this line already checks if the db exists
-		RelationalQuerier.conn = sqlite3.self.connect('breath.db')
+		RelationalQuerier.conn = sqlite3.connect('breath.db')
 		
 		# create db cursor
 		RelationalQuerier.c = RelationalQuerier.conn.cursor()
@@ -44,7 +45,16 @@ class RelationalQuerier:
 	def query(self, query:str) -> Tuple[bool, Union[List[Dict[str, str]], None]]:
 		"""Executes the desired query and fetch its results if there is any
         """
-		return RelationalQuerier.c.execute(query).fetchall()
+		result = None
+		sucess = True
+		
+		try:
+			result = RelationalQuerier.c.execute(query).fetchall()
+			sucess = True
+		except Exception:
+			pass
+		
+		return sucess, result 
 
 	def cancel(self):
 		"""Close the database connection once the program is done with it.
