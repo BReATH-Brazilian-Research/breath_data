@@ -5,6 +5,7 @@ from breath_api_interface.service_interface import Service
 from breath_api_interface.request import Request, Response
 
 from breath_data.bd_acess_point.relational_querier import RelationalQuerier
+from breath_data.bd_acess_point.graph_querier import GraphQuerier
 
 class BDAcessPoint(Service):
     '''BReATH service for provide BD acess
