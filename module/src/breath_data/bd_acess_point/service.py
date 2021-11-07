@@ -41,6 +41,10 @@ class BDAcessPoint(Service):
             response = self._register_symptom(request)
         elif request.operation_name == "register_user":
             response = self._register_user(request)
+        elif request.operation_name == "get_symptoms_types":
+            response = self._get_symptoms_types(request)
+        elif request.operation_name == "register_symptom_type":
+            response = self._register_symptom_type(request)
 
         request.send_response(response)
 
@@ -132,3 +136,22 @@ class BDAcessPoint(Service):
             return None
         
         return users
+
+    def _get_symptoms_types(self, request:Request) -> Response:
+        neo_query = "MATCH (t:Tipo_Sintoma RETURN t"
+        sucess, symptoms_types = self.graph_querier.query(neo_query)
+
+        if not sucess:
+            return Response(False, {"message":"Unable to access symptoms types"})
+        
+        return Response(False, {"symptoms_types":symptoms_types})
+
+    def _register_symptom_type(self, request:Request) -> Response:
+        neo_query = "CREATE ({0}:Tipo_Sintoma)".format(request.request_info["symptom_name"])
+
+        sucess, _ = self.graph_querier.query(neo_query)
+
+        if not sucess:
+            return Response(False, {"message":"Unable to register symptom type"}) 
+
+        return Response(True)
