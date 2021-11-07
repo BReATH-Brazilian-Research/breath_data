@@ -18,25 +18,42 @@ class RelationalQuerier:
 
 
 		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Sintoma(
-				Tipo TEXT,
-				Ano INT,
-				Mês INT,
-				Dia INT,
-				Cidade TEXT,
-				Paciente FOREIGN_KEY)""")
+					Código INT NOT NULL AUTO_INCREMENT,
+					Ano INT,
+					Mês INT,
+					Dia INT,
+					Cidade FOREIGN_KEY,
+					Tipo TEXT,
+					PRIMARY KEY (Código))""")
 
 		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS PacienteSintoma(
-				Paciente FOREIGN_KEY,
-				Sintoma FOREIGN_KEY)""")
+					Paciente FOREIGN_KEY,
+					Sintoma FOREIGN_KEY)""")
 
 
 			# create table usuarios
-		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Usuarios(
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Usuários(
+					Código INT NOT NULL AUTO_INCREMENT,
 					Nome TEXT,
-					id INT,
-					laudo TEXT,
 					Idade INT,
-					estado_civil TEXT)""")
+					PRIMARY KEY (Código))""")
+
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Cidades(
+					Nome TEXT,
+					UF INT,
+					Código INT NOT NULL,
+					PRIMARY KEY (Código))""")
+
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Pacientes(
+					Código INT NOT NULL AUTO_INCREMENT,
+					Sexo TEXT,
+					Diagnóstico FOREIGN_KEY,
+					PRIMARY KEY (Código))""")
+
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Diagnósticos(
+					Código INT NOT NULL AUTO_INCREMENT,
+					Diagnóstico TEXT,
+					PRIMARY KEY (Código))""")	
 			
 			# commit changes
 		RelationalQuerier.conn.commit()
