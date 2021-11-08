@@ -6,14 +6,15 @@ from breath_api_interface.request import Request, Response
 import pandas as pd
 from pandas.core import series
 
-import open_sus
-import ibge
+import breath_data.data_workflow.open_sus as open_sus
+import breath_data.data_workflow.ibge as ibge
 
 class DataWorflow(Service):
     def __init__(self, proxy:ServiceProxy, request_queue:Queue):
         '''DataWorflow constructor.
         '''
         super().__init__(proxy=proxy, request_queue=request_queue)
+
 
     def run(self) -> None:
         '''Run the service, handling requests.
@@ -25,7 +26,6 @@ class DataWorflow(Service):
             return
 
         response : Response = Response(sucess=False, response_data={"message": "Operation not available"})
-
 
         if request.operation_name == "load_open_sus_data":
             response = self._load_open_sus_data(request)
@@ -65,13 +65,19 @@ class DataWorflow(Service):
 
         # outros: EVOLUCAO -> Óbito, Alta        
 
+        print("Log: Inserindo tipos de sintoma")
+
         tipos_sintoma = list( SINTOMA_DICT.values() ) 
 
         for tipo_sintoma in tipos_sintoma:
             request = Request(service_name="BDAcessPoint", operation_name="register_symptom_type")
             request.request_info = {"symptom_name": tipo_sintoma}
-            self._proxy.send_request(request)
+            response = self._proxy.send_request(request)
 
+            if not response.sucess:
+                return response 
+
+        print("Log: Inserindo dados do IBGE")
 
         table_ibge : pd.DataFrame = ibge.load_csv()
         for i in range(ibge.shape[0]):
@@ -82,9 +88,16 @@ class DataWorflow(Service):
 
             request = Request(service_name="BDAcessPoint", operation_name="register_city")
             request.request_info = {"uf":uf, "nome":nome, "cod":cod}
-            self._proxy.send_request(request)
+            response = self._proxy.send_request(request)
+
+            if not response.sucess:
+                return response 
+
+        print("Carregando dados do SUS")
 
         table : pd.DataFrame = open_sus.loadcsv()
+
+        print("Inserindo dados do SUS")
 
         n_dado = table.shape[0]
 
@@ -109,4 +122,9 @@ class DataWorflow(Service):
                     request = Request(service_name="BDAcessPoint", operation_name="register_symptom")
                     request.request_info = {"year":ano, "month":mes, "day": dia, "city": cidade,
                                             "symptom_name": tipo_sintoma[sintoma_key], "patient_id":cod}
-                    self._proxy.send_request(request)
+                    response = self._proxy.send_request(request)
+
+                    if not response.sucess:
+                        return response 
+
+        return Response(True)

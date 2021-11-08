@@ -24,9 +24,9 @@ class BDAcessPoint(Service):
         '''
         super().__init__(proxy=proxy, request_queue=request_queue)
 
+    def start(self):
         self.relational_querier = RelationalQuerier()
         self.graph_querier = GraphQuerier()
-        
 
     def run(self) -> None:
         '''Run the service, handling BD requests.

@@ -18,7 +18,7 @@ class RelationalQuerier:
 
 
 		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Sintoma(
-					Código INT NOT NULL AUTO_INCREMENT,
+					Código INT NOT NULL,
 					Ano INT,
 					Mês INT,
 					Dia INT,
@@ -33,7 +33,7 @@ class RelationalQuerier:
 
 			# create table usuarios
 		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Usuários(
-					Código INT NOT NULL AUTO_INCREMENT,
+					Código INT NOT NULL,
 					Nome TEXT,
 					Idade INT,
 					PRIMARY KEY (Código))""")
@@ -45,13 +45,13 @@ class RelationalQuerier:
 					PRIMARY KEY (Código))""")
 
 		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Pacientes(
-					Código INT NOT NULL AUTO_INCREMENT,
+					Código INT NOT NULL,
 					Sexo TEXT,
 					Diagnóstico FOREIGN_KEY,
 					PRIMARY KEY (Código))""")
 
 		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Diagnósticos(
-					Código INT NOT NULL AUTO_INCREMENT,
+					Código INT NOT NULL,
 					Diagnóstico TEXT,
 					PRIMARY KEY (Código))""")	
 			
