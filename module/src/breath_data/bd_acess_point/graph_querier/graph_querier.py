@@ -13,7 +13,7 @@ class GraphQuerier:
 
 	def __init__(self):
 		self.driver = GraphDatabase.driver(
-			"bolt://localhost:7687", auth=("neo4j","password"))
+			"bolt://localhost:7687", auth=("neo4j","password")),
 			# max_connection_lifetime=30 * 60,
 			# max_connection_pool_size=50,
 			# connection_acquisition_timeout=2 * 60,
