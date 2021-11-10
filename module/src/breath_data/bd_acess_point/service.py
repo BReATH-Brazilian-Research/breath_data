@@ -17,17 +17,15 @@ class BDAcessPoint(Service):
         :type graph_querier: breath_data.bd_acess_point.graph_querier.GraphQuerier
     '''
 
-    def __init__(self, proxy:ServiceProxy, request_queue:Queue):
+    def __init__(self, proxy:ServiceProxy, request_queue:Queue, global_response_queue:Queue):
         '''BDAcessPoint constructor.
 
             Initializes the service with the BDs.
         '''
-        super().__init__(proxy=proxy, request_queue=request_queue)
-
+        super().__init__(proxy, request_queue, global_response_queue, "BDAcessPoint")
         self.relational_querier = RelationalQuerier()
         self.graph_querier = GraphQuerier()
         
-
     def run(self) -> None:
         '''Run the service, handling BD requests.
         '''
@@ -36,7 +34,7 @@ class BDAcessPoint(Service):
         if request is None:
             return
 
-        response : Response = Response(sucess=False, response_data={"message": "Operation not available"})
+        response : Response = request.create_response(sucess=False, response_data={"message": "Operation not available"})
 
         if request.operation_name == "register_symptom":
             response = self._register_symptom(request)
@@ -46,8 +44,12 @@ class BDAcessPoint(Service):
             response = self._get_symptoms_types(request)
         elif request.operation_name == "register_symptom_type":
             response = self._register_symptom_type(request)
+        elif request.operation_name == "register_city":
+            response = self._register_city(request)
+        elif request.operation_name == "register_patient":
+            response = self._register_patient(request)
 
-        request.send_response(response)
+        self._send_response(response)
 
         
     def _cancel_all(self):
@@ -66,15 +68,14 @@ class BDAcessPoint(Service):
         sucess, users = self.relational_querier.query(sql_query)
 
         if not sucess:
-            return Response(sucess=False, response_data={"message":"Cannot create user"})
+            return request.create_response(sucess=False, response_data={"message":"Cannot create user"})
         
         user_id = users[0]["id"]
 
-        return Response(sucess=True, response_data={"user_id":user_id})
+        return request.create_response(sucess=True, response_data={"user_id":user_id})
 
     def _register_symptom(self, request: Request) -> Response:
         
-        user_id = request.request_info["user_id"]
         symptom_name = request.request_info["symptom_name"]
         
         year = request.request_info["year"]
@@ -85,18 +86,26 @@ class BDAcessPoint(Service):
 
         if symptoms_types is None:
             self._cancel_all()
-            return Response(sucess=False, response_data={"message": "Symptom type not found"})
+            return request.create_response(sucess=False, response_data={"message": "Symptom type not found"})
 
         symptom_type_id = symptoms_types[0]["id"]
 
-        users = self._search_user(user_id)
+        patient_id = 0
 
-        if users is None:
-            self._cancel_all()
-            return Response(sucess=False, response_data={"message": "User not found"})
+        if "patient_id" in request.request_info:
+            patient_id = request.request_info["patient_id"]
+        else:
+            user_id = request.request_info["user_id"]
+            users = self._search_user(user_id)
 
-        patient_id = users[0]["Paciente"]
-        city_id = users[0]["Cidade"]
+            if users is None:
+                self._cancel_all()
+                return request.create_response(sucess=False, response_data={"message": "User not found"})
+
+            patient_id = users[0]["Paciente"]
+            city_id = users[0]["Cidade"]
+
+        city_id = request.request_info["city"]
 
         sql_query = "INSERT INTO Sintoma(Tipo, Ano, Mês, Dia, Cidade)"
         sql_query += " VALUES('{0}', '{1}', '{2}', '{3}', {4})".format(symptom_type_id, year, month, day, city_id)
@@ -105,7 +114,7 @@ class BDAcessPoint(Service):
 
         if not sucess:
             self._cancel_all()
-            return Response(sucess=False, response_data={"message":"Error while registering symptom"})
+            return request.create_response(sucess=False, response_data={"message":"Error while registering symptom"})
 
         symptom_id = symptom[0]["id"]
 
@@ -114,11 +123,11 @@ class BDAcessPoint(Service):
 
         if not sucess:
             self._cancel_all()
-            return Response(sucess=False, response_data={"message":"Cannot register patient symptom relation"})
+            return request.create_response(sucess=False, response_data={"message":"Cannot register patient symptom relation"})
 
         self._commit_all()
 
-        return Response(sucess=True)
+        return request.create_response(sucess=True)
 
     def _search_symptom_type(self, symptom_name:str) -> Union[List[Dict[str, str]], None]:
         neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(symptom_name)        
@@ -145,7 +154,7 @@ class BDAcessPoint(Service):
         if not sucess:
             return Response(False, {"message":"Unable to access symptoms types"})
         
-        return Response(False, {"symptoms_types":symptoms_types})
+        return Response(True, {"symptoms_types":symptoms_types})
 
     def _register_symptom_type(self, request:Request) -> Response:
         neo_query = "CREATE ({0}:Tipo_Sintoma)".format(request.request_info["symptom_name"])
@@ -153,6 +162,32 @@ class BDAcessPoint(Service):
         sucess, _ = self.graph_querier.query(neo_query)
 
         if not sucess:
-            return Response(False, {"message":"Unable to register symptom type"}) 
+            return request.create_response(False, {"message":"Unable to register symptom type"}) 
 
-        return Response(True)
+        return request.create_response(True)
+
+    def _register_city(self, request:Request) -> Response:
+        uf = request.request_info["uf"]
+        nome = request.request_info["nome"]
+        cod = request.request_info["cod"]
+
+        sql_query = "INSERT_INTO Cidades(UF, Nome, Código) VALUES('{0}', '{1}', '{2}')".format(uf, nome, cod)
+
+        sucess, _ = self.relational_querier.query(sql_query)
+
+        if not sucess:
+            return request.create_response(False, {"message":"Unable to register city"})
+        
+        return request.create_response(True)
+
+    def _register_patient(self, request:Request) -> Response:
+        sex = request.request_info["sex"]
+
+        sql_query = "INSERT_INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
+
+        sucess, patient = self.relational_querier.query(sql_query)
+
+        if not sucess:
+            return request.create_response(False, {"message":"Unable to register patient"})
+        
+        return request.create_response(True, {"patient": patient[0]})
