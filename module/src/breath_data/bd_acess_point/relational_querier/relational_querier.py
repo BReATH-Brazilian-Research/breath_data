@@ -63,7 +63,7 @@ class RelationalQuerier:
 		"""Executes the desired query and fetch its results if there is any
         """
 		result = None
-		sucess = True
+		sucess = False
 		
 		try:
 			result = RelationalQuerier.c.execute(query).fetchall()

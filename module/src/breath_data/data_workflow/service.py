@@ -10,10 +10,10 @@ import breath_data.data_workflow.open_sus as open_sus
 import breath_data.data_workflow.ibge as ibge
 
 class DataWorflow(Service):
-    def __init__(self, proxy:ServiceProxy, request_queue:Queue):
+    def __init__(self, proxy:ServiceProxy, request_queue:Queue, global_response_queue:Queue):
         '''DataWorflow constructor.
         '''
-        super().__init__(proxy=proxy, request_queue=request_queue)
+        super().__init__(proxy, request_queue, global_response_queue, "DataWorkflow")
 
 
     def run(self) -> None:
@@ -25,12 +25,12 @@ class DataWorflow(Service):
         if request is None:
             return
 
-        response : Response = Response(sucess=False, response_data={"message": "Operation not available"})
+        response : Response = request.create_response(sucess=False, response_data={"message": "Operation not available"})
 
         if request.operation_name == "load_open_sus_data":
             response = self._load_open_sus_data(request)
 
-        request.send_response(response)
+        self._send_response(response)
 
     def _load_open_sus_data(self, request:Request) -> Response:
         SINTOMA_DICT = {
@@ -70,9 +70,8 @@ class DataWorflow(Service):
         tipos_sintoma = list( SINTOMA_DICT.values() ) 
 
         for tipo_sintoma in tipos_sintoma:
-            request = Request(service_name="BDAcessPoint", operation_name="register_symptom_type")
-            request.request_info = {"symptom_name": tipo_sintoma}
-            response = self._proxy.send_request(request)
+            request_info = {"symptom_name": tipo_sintoma}
+            response = self._send_request(service_name="BDAcessPoint", operation_name="register_symptom_type", request_info=request_info)
 
             if not response.sucess:
                 return response 
@@ -80,17 +79,19 @@ class DataWorflow(Service):
         print("Log: Inserindo dados do IBGE")
 
         table_ibge : pd.DataFrame = ibge.load_csv()
-        for i in range(ibge.shape[0]):
+        for i in range(table_ibge.shape[0]):
             linha = table_ibge.iloc[i]
             uf = linha["UF"]
             nome = linha["Nome_Município"]
             cod = linha["Código Município Completo"]
 
-            request = Request(service_name="BDAcessPoint", operation_name="register_city")
-            request.request_info = {"uf":uf, "nome":nome, "cod":cod}
-            response = self._proxy.send_request(request)
+            request_info = {"uf":uf, "nome":nome, "cod":cod}
+            response = self._send_request(service_name="BDAcessPoint", operation_name="register_city", request_info=request_info)
+
+            print(100*i/table_ibge.shape[0], "% - ", i, "/", table_ibge.shape[0])
 
             if not response.sucess:
+                print("ERRO AO INSERIR DADOS DO IBGE")
                 return response 
 
         print("Carregando dados do SUS")
@@ -107,9 +108,9 @@ class DataWorflow(Service):
             sexo = linha["CS_SEXO"]
             cidade = linha["ID_MUNICIP"]
 
-            request = Request(service_name="BDAcessPoint", operation_name="register_patient")
-            request.request_info = {"sex":sexo}
-            response = self._proxy.send_request(request)
+            request_info = {"sex":sexo}
+            response = self._send_request(service_name="BDAcessPoint", operation_name="register_patient", request_info=request_info)
+
             cod = response.response_data["patient"]["Código"]
 
             data = linha["DT_NOTIFIC"]
@@ -119,12 +120,12 @@ class DataWorflow(Service):
 
             for sintoma_key in tipo_sintoma:
                 if linha["sintoma_key"] == 1:
-                    request = Request(service_name="BDAcessPoint", operation_name="register_symptom")
-                    request.request_info = {"year":ano, "month":mes, "day": dia, "city": cidade,
+                    request_info = {"year":ano, "month":mes, "day": dia, "city": cidade,
                                             "symptom_name": tipo_sintoma[sintoma_key], "patient_id":cod}
-                    response = self._proxy.send_request(request)
+
+                    response = self._send_request(service_name="BDAcessPoint", operation_name="register_symptom", request_info=request_info)
 
                     if not response.sucess:
                         return response 
 
-        return Response(True)
+        return request.create_response(True)
