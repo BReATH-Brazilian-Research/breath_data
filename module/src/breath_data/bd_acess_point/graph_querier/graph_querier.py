@@ -13,7 +13,7 @@ class GraphQuerier:
 
 	def __init__(self):
 		self.driver = GraphDatabase.driver(
-			"bolt://localhost:7687", auth=("neo4j","password"))#,
+			"bolt://localhost:7687", auth=("neo4j","password")),
 			# max_connection_lifetime=30 * 60,
 			# max_connection_pool_size=50,
 			# connection_acquisition_timeout=2 * 60,
@@ -21,7 +21,7 @@ class GraphQuerier:
 			# encrypted=True,
 			# trust=TRUST_ALL_CERTIFICATES)
 
-	def close(self):
+	def _close(self):
 		# Don't forget to close the driver connection when you are finished with it
 		self.driver.close()
 
@@ -31,8 +31,7 @@ class GraphQuerier:
 
 		result = self.driver.session().run(query)
 		try:
-			return True, [{"p1": row["p1"]["name"], "p2": row["p2"]["name"]}
-					for row in result]
+			return result
 		# Capture any errors along with the query and data for traceability
 		except ServiceUnavailable as exception:
 			logging.error("{query} raised an error: \n {exception}".format(
