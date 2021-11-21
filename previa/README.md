@@ -120,7 +120,7 @@ título do arquivo/base | link | breve descrição
 título da base | link | breve descrição
 ----- | ----- | -----
 `Climate Weather Surface of Brazil - Hourly` | `https://www.kaggle.com/PROPPG-PPG/hourly-weather-surface-brazil-southeast-region` | `Banco de dados com registros climáticos e atmosféricos de estações meteorológicas de todo o brasil com granularidade de hora desde 2000`
-`SRGA Banco de dados síndrome respiratória aguda grave 2013 - 2018` | `https://opendatasus.saude.gov.br/organization/ministerio-da-saude?q=Banco+de+Dados+de+S%C3%ADndrome+Respirat%C3%B3ria+Aguda+Grave&sort=score+desc%2C+metadata_modified+desc` | `Base de dados aberta do SUS sobre todos os diagnósticos e suspeitas de Sindrome Respiratória Aguda Grave desde 2009`
+`SRGA Banco de dados síndrome respiratória aguda grave 2009 - 2018` | `https://opendatasus.saude.gov.br/organization/ministerio-da-saude?q=Banco+de+Dados+de+S%C3%ADndrome+Respirat%C3%B3ria+Aguda+Grave&sort=score+desc%2C+metadata_modified+desc` | `Base de dados aberta do SUS sobre todos os diagnósticos e suspeitas de Sindrome Respiratória Aguda Grave desde 2009`
 `Plataforma da Qualidade do Ar` | `http://qualidadedoar.org.br/about` | `Base de dados aberta com medição de conscentração de poluentes no ar por região brasileira`
 `Brazilian_cities_database` | `https://github.com/hewerthomn/brazilian_cities_database/blob/master/cities.sql` | `Base de dados aberta com a longitude e latitude da quase totalidade de cidades brasileiras`
 
