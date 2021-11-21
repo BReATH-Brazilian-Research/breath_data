@@ -1,4 +1,6 @@
-from typing import Dict, List, Union
+from future import __annotations__
+
+from typing import Callable, Dict, List, Union
 from breath_api_interface.proxy import ServiceProxy
 from breath_api_interface.queue import Queue
 from breath_api_interface.service_interface import Service
@@ -25,6 +27,17 @@ class BDAcessPoint(Service):
         super().__init__(proxy, request_queue, global_response_queue, "BDAcessPoint")
         self.relational_querier = RelationalQuerier()
         self.graph_querier = GraphQuerier()
+
+        self._operations : Dict[str, Callable[[BDAcessPoint, Request], Response]] = {
+                            "register_symptom" : self._register_symptom,
+                            "register_workflow": self._register_workflow,
+                            "is_workflow_runned": self._is_workflow_runned,
+                            "register_user": self._register_user,
+                            "get_symptoms_types" : self._get_symptoms_types,
+                            "register_symptom_type": self._register_symptom_type,
+                            "register_city": self._register_city,
+                            "register_patient" : self._register_patient
+                            }
         
     def run(self) -> None:
         '''Run the service, handling BD requests.
@@ -33,21 +46,11 @@ class BDAcessPoint(Service):
 
         if request is None:
             return
-
+            
         response : Response = request.create_response(sucess=False, response_data={"message": "Operation not available"})
 
-        if request.operation_name == "register_symptom":
-            response = self._register_symptom(request)
-        elif request.operation_name == "register_user":
-            response = self._register_user(request)
-        elif request.operation_name == "get_symptoms_types":
-            response = self._get_symptoms_types(request)
-        elif request.operation_name == "register_symptom_type":
-            response = self._register_symptom_type(request)
-        elif request.operation_name == "register_city":
-            response = self._register_city(request)
-        elif request.operation_name == "register_patient":
-            response = self._register_patient(request)
+        if request.operation_name in self._operations:
+            response = self._operations[request.operation_name](request)
 
         self._send_response(response)
 
@@ -191,3 +194,26 @@ class BDAcessPoint(Service):
             return request.create_response(False, {"message":"Unable to register patient"})
         
         return request.create_response(True, {"patient": patient[0]})
+
+    def _register_workflow(self, request:Request) -> Response:
+        name = request.request_info["workflow_name"]
+
+        sql_query = "INSERT_INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
+
+        sucess, _ = self.relational_querier.query(sql_query)
+
+        if not sucess:
+            return request.create_response(False, {"message":"Unable to register workflow"})
+        
+        return request.create_response(True)
+
+    def _is_workflow_runned(self, request:Request) -> Response:
+        name = request.request_info["workflow_name"]
+
+        sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = {0}".format(name)
+        sucess, workflows = self.relational_querier.query(sql_query)
+
+        if len(workflows) > 0 and workflows[0].Executado != 0:
+            return request.create_response(True)
+
+        return request.create_response(False)

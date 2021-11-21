@@ -125,6 +125,13 @@ class RelationalQuerier:
 			elvt REAL,
 			date_time DATETIME)
 			""")
+
+		RelationalQuerier.c.execute("""
+			CREATE TABLE IF NOT EXISTS Workflow(
+			Nome TEXT PRIMARY KEY,
+			Executado BOOL NOT NULL DEFAULT '0'
+			)""")
+
 		RelationalQuerier.conn.commit()
 	
 	def query(self, query:str) -> Tuple[bool, Union[List[Dict[str, str]], None]]:
