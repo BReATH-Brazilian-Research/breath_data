@@ -15,7 +15,6 @@ class DataWorkflow(Service):
         '''
         super().__init__(proxy, request_queue, global_response_queue, "DataWorkflow")
 
-
     def run(self) -> None:
         '''Run the service, handling requests.
         '''
