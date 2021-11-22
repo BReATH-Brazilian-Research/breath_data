@@ -27,7 +27,6 @@ Sintomas(_Id_, Tipo, Ano, Mes, Dia, Cidade, Paciente
 
 
 ## Dataset Publicado
-> Elencar os arquivos/bases preliminares dos datasets serão publicados.
 
 título do arquivo/base | link | breve descrição
 ----- | ----- | -----
@@ -37,10 +36,6 @@ clima_sudeste_processado.csv | ![clima_sudeste_processado.csv](https://drive.goo
 clima_norte_processado.csv | ![clima_norte_processado.csv](https://drive.google.com/file/d/1sgAY6_U1FLTKwv_GDmus6dyGnlzI-m0g/view?usp=sharing) | Valores por hora de dados do clima da região norte do país
 clima_nordeste_processado.csv | ![clima_nordeste_processado.csv](https://drive.google.com/file/d/1QB3_MoBUZvv9boxWelNyqoNV-uVvupN9/view?usp=sharing) | Valores por hora de dados do clima da região nordeste do país
 clima_centro_oeste_processado.csv | ![clima_centro_oeste_processado.csv](https://drive.google.com/file/d/17UMWjVsAyCvOVwGsRVw715647DTJbJNL/view?usp=sharing) | Valores por hora de dados do clima da região centro-oeste do país
-
-> Os arquivos finais do dataset publicado devem ser colocados na pasta `data`, em subpasta `processed`. Outros arquivos serão colocados em subpastas conforme seu papel (externo, interim, raw). A diferença entre externo e raw é que o raw é em formato não adaptado para uso. A pasta `raw` é opcional, pois pode ser substituída pelo link para a base original da seção anterior.
-> Coloque arquivos que não estejam disponíveis online e sejam acessados pelo notebook. Relacionais (usualmente CSV), XML, JSON e CSV ou triplas para grafos.
-> Este é o conjunto mínimo de informações que deve constar na disponibilização do Dataset, mas a equipe pode enriquecer esta seção.
 
 ## Bases de Dados
 
