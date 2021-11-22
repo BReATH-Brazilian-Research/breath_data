@@ -1,17 +1,17 @@
 
-# Projeto `Breath - DataBank`
+# Projeto Breath - DataBank
 
-# Equipe `Breath` - `BRth`
-* `Gabriel Costa Kinder` - `234720`
-* `João Pedro de Moraes Bonucci` - `218733`
-* `Elton Cardoso Do Nascimento` - `233840`
-* `Lucas Otávio Nascimento de Araújo` - `240106`
+# Equipe Breath - BRth
+* Gabriel Costa Kinder - 234720
+* João Pedro de Moraes Bonucci - 218733
+* Elton Cardoso Do Nascimento - 233840
+* Lucas Otávio Nascimento de Araújo - 240106
 
 ## Resumo do Projeto
-> O data set consiste em um banco de dados relacional que agrega, Dados climaticos, Dados de qualidade do ar e Dados de doenças respiratórias do território Brasileiro entre os anos de 2000 e 2020 (nem todos os datasets contém todo o periodo). Com isso, ambicionamos encontrar ou fortalecer relações entre condições ambientais e doenças respiratórias no nosso país fornecendo dados específicos por cidade e mês ao longo de anos. Acreditamos que arquitetar um banco de dados que relacione estas dusa características possa gerar análises e predições importantes para a situação de doenças respiratórias no país.
+O data set consiste em um banco de dados relacional que agrega, Dados climaticos, Dados de qualidade do ar e Dados de doenças respiratórias do território Brasileiro entre os anos de 2000 e 2020 (nem todos os datasets contém todo o periodo). Com isso, ambicionamos encontrar ou fortalecer relações entre condições ambientais e doenças respiratórias no nosso país fornecendo dados específicos por cidade e mês ao longo de anos. Acreditamos que arquitetar um banco de dados que relacione estas dusa características possa gerar análises e predições importantes para a situação de doenças respiratórias no país.
 
 ## Slides da Apresentação
-> Coloque aqui o link para o PDF da apresentação final
+![Slides PDF](slides/slides.pdf)_
 
 ## Modelo Conceitual
 
@@ -27,7 +27,7 @@
 
 título do arquivo/base | link | breve descrição
 ----- | ----- | -----
-`<título do arquivo/base>` | `<link para arquivo/base>` | `<breve descrição do arquivo/base>`
+saude_SRAG_geolocalizado.csv | ![saude_SRAG_geolocalizado.csv](https://drive.google.com/file/d/1LYQSVgM-iJRNL0_YAFeeWyzZMm9jGlfv/view?usp=sharing) | Compilação de dados tratados de casos de doenças em postos de saúde SUS ao redor do país de 2013 à 2018, incluindo nome de cidades e coordenadas geográficas em latitude e longitude
 
 > Os arquivos finais do dataset publicado devem ser colocados na pasta `data`, em subpasta `processed`. Outros arquivos serão colocados em subpastas conforme seu papel (externo, interim, raw). A diferença entre externo e raw é que o raw é em formato não adaptado para uso. A pasta `raw` é opcional, pois pode ser substituída pelo link para a base original da seção anterior.
 > Coloque arquivos que não estejam disponíveis online e sejam acessados pelo notebook. Relacionais (usualmente CSV), XML, JSON e CSV ou triplas para grafos.
@@ -37,10 +37,10 @@ título do arquivo/base | link | breve descrição
 
 título da base | link | breve descrição
 ----- | ----- | -----
-`Climate Weather Surface of Brazil - Hourly` | `https://www.kaggle.com/PROPPG-PPG/hourly-weather-surface-brazil-southeast-region` | `Banco de dados com registros climáticos e atmosféricos de estações meteorológicas de todo o brasil com granularidade de hora desde 2000`
-`SRGA Banco de dados síndrome respiratória aguda grave 2009 - 2018` | `https://opendatasus.saude.gov.br/organization/ministerio-da-saude?q=Banco+de+Dados+de+S%C3%ADndrome+Respirat%C3%B3ria+Aguda+Grave&sort=score+desc%2C+metadata_modified+desc` | `Base de dados aberta do SUS sobre todos os diagnósticos e suspeitas de Sindrome Respiratória Aguda Grave desde 2009`
-`Plataforma da Qualidade do Ar` | `http://qualidadedoar.org.br/about` | `Base de dados aberta com medição de conscentração de poluentes no ar por região brasileira`
-`Brazilian_cities_database` | `https://github.com/hewerthomn/brazilian_cities_database/blob/master/cities.sql` | `Base de dados aberta com a longitude e latitude da quase totalidade de cidades brasileiras`
+Climate Weather Surface of Brazil - Hourly | ![Climate Weather Surface of Brazil - Hourly](https://www.kaggle.com/PROPPG-PPG/hourly-weather-surface-brazil-southeast-region) | Banco de dados com registros climáticos e atmosféricos de estações meteorológicas de todo o brasil com granularidade de hora desde 2000
+SRGA Banco de dados síndrome respiratória aguda grave 2013 - 2018 | ![SRAG DataSUS 2013-2018](https://opendatasus.saude.gov.br/dataset/bd-srag-2012-a-2018) | Base de dados aberta do SUS sobre todos os diagnósticos e suspeitas de Sindrome Respiratória Aguda Grave desde 2009
+Plataforma da Qualidade do Ar | ![Qualidade do Ar](http://qualidadedoar.org.br/about) | Base de dados aberta com medição de conscentração de poluentes no ar por região brasileira
+Brazilian_cities_database | ![Brazilian Cities DB](https://github.com/hewerthomn/brazilian_cities_database/blob/master/cities.sql) | Base de dados aberta com a longitude e latitude da quase totalidade de cidades brasileiras
 
 ## Detalhamento do Projeto
 > Apresente aqui detalhes do processo de construção do dataset e análise. Nesta seção ou na seção de Perguntas podem aparecer destaques de código como indicado a seguir. Note que foi usada uma técnica de highlight de código, que envolve colocar o nome da linguagem na abertura de um trecho com `~~~`, tal como `~~~python`.
