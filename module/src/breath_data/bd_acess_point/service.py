@@ -1,4 +1,4 @@
-from future import annotations
+from __future__ import annotations
 
 from typing import Callable, Dict, List, Union
 from breath_api_interface.proxy import ServiceProxy

@@ -89,8 +89,11 @@ class RelationalQuerier:
 		RelationalQuerier.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS PacienteSintoma(
-			FOREIGN KEY(Saciente) REFERENCES Usuarios(Id),
-			FOREIGN KEY(Sintoma) REFERENCES Usuarios(Id)
+			Paciente INTEGER,
+			Sintoma INTEGER,
+			FOREIGN KEY (Paciente) REFERENCES Usuarios(Id),
+			FOREIGN KEY (Sintoma) REFERENCES Sintomas(Id)
+			)
 			""")
 			
 			# commit changes
