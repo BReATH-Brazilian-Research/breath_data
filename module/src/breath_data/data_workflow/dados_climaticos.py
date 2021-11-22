@@ -4,6 +4,7 @@ from tkinter import Tk
 from tkinter.filedialog import askopenfilenames
 from functools import reduce
 from relational_querier import RelationalQuerier
+#from graph_querier import GraphQuerier
 
 # os dados climaticos brutos foram baixados diretamente do link: https://www.kaggle.com/PROPPG-PPG/hourly-weather-surface-brazil-southeast-region
 abbreviation = ['date','precipitacao','pressao_at_max', 'pressao_at_min', 'radiacao', 'temp_max','temp_min','umidade','max_vent','velocidade_vent','region','state','station','lat','lon','elvt']
@@ -68,7 +69,7 @@ def add_data_graph(df = None, csv = None):
 		dict = {} 
 		for A, B in zip(clean_abbreviation, df[i]):
 			dict[A] = B
-		query = 'CREATE (' + i + ':Clima {' + dict + '});'
+		query = 'CREATE (' + i + ':Climate {' + dict + '});'
 		result = db.query(query)
 		print(len(result))
 	db._close()
@@ -80,7 +81,7 @@ def add_data_relational(db, df = None, csv = None):
 	for data in df.values:
 
 		query = """
-		INSERT INTO Clima 
+		INSERT INTO Climate 
 		(date,precipitacao,pressao_at_max, pressao_at_min, radiacao,
 		temp_max,temp_min,umidade,max_vent,velocidade_vent,region,
 		state,station,lat,lon,elvt) 
@@ -112,7 +113,7 @@ if __name__ == "__main__":
 			add_data_relational(db, csv = file)
 
 	# veja se a insercao deu certo
-	query = 'SELECT * FROM Clima;'
+	query = 'SELECT * FROM Climate;'
 	result = db.query(query)
 	print('result:', result)
 	#add_data_graph(df)
