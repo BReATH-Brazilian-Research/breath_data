@@ -67,7 +67,7 @@ class RelationalQuerier:
 		RelationalQuerier.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS Sintomas(
-			Id INTEGER PRIMARY KEY
+			Id INTEGER PRIMARY KEY,
 			Tipo TEXT,
 			Ano INTEGER,
 			Mês INTEGER,
