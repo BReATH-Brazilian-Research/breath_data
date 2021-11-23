@@ -91,6 +91,7 @@ class RelationalQuerier:
 			elvt REAL)
 			""")
 
+		# create table SRAG
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS SRAG(
@@ -204,7 +205,6 @@ class RelationalQuerier:
 			DT_UT_DOSE TEXT)
 			""")
 		
-		# create table SRAG
 		self.conn.commit()
 
 	def query(self, query:str, values:str = None) -> Tuple[bool, Union[List[Dict[str, str]], None]]:
