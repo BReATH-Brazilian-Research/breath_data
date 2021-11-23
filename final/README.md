@@ -31,7 +31,7 @@ SRAG(_id_, ID_MUNICIP, SEM_NOT, SG_UF_NOT, DT_SIN_PRI, DT_NASC, NU_IDADE_N, CS_S
 CLIMA(_id_, date, precipitacao , pressao_at_max , pressao_at_min , radiacao , temp_max , temp_min , umidade , max_vent , velocidade_vent , region , state , 
 	station , lat , lon , elvt)
 
-Sintomas(_Id_, Tipo, Ano, Mes, Dia, Cidade, Paciente
+Sintomas(_Id_, Tipo, Ano, Mes, Dia, Cidade, Paciente)
 	Paciente chave estrangeira -> SRAG(id)
 
 Estacoes(_Id_,Stacao,Regiao,UF,Codigo,Prim_data,alt,lon,lat)
@@ -45,12 +45,15 @@ Cidades(_Id_,UF,Nome_UF,Mesorregião Geográfica,Nome_Mesorregião,Microrregião
 
 título do arquivo/base | link | breve descrição
 ----- | ----- | -----
-saude_SRAG_geolocalizado.csv | [saude_SRAG_geolocalizado.csv](https://drive.google.com/file/d/1LYQSVgM-iJRNL0_YAFeeWyzZMm9jGlfv/view?usp=sharing) | Compilação de dados tratados de casos de doenças em postos de saúde SUS ao redor do país de 2013 à 2018, incluindo nome de cidades e coordenadas geográficas em latitude e longitude
+srag_full_cities.csv | [srag_full_cities.csv](https://drive.google.com/file/d/1afwwfCsLYzNcMdGei3BBKOeBc3WGnto-/view?usp=sharing) | Compilação de dados tratados de casos de doenças em postos de saúde SUS ao redor do país de 2013 à 2018, incluindo nome de cidades
 clima_sul_processado.csv | [clima_sul_processado.csv](https://drive.google.com/file/d/16cOnwBS8JqDIwOxH_pdcTyQG7L-DSlmf/view?usp=sharing) | Valores por hora de dados do clima da região sul do país
 clima_sudeste_processado.csv | [clima_sudeste_processado.csv](https://drive.google.com/file/d/1PofSxREt7spX005JxK5QL59m36fSDtp2/view?usp=sharing) | Valores por hora de dados do clima da região sudeste do país
 clima_norte_processado.csv | [clima_norte_processado.csv](https://drive.google.com/file/d/1sgAY6_U1FLTKwv_GDmus6dyGnlzI-m0g/view?usp=sharing) | Valores por hora de dados do clima da região norte do país
 clima_nordeste_processado.csv | [clima_nordeste_processado.csv](https://drive.google.com/file/d/1QB3_MoBUZvv9boxWelNyqoNV-uVvupN9/view?usp=sharing) | Valores por hora de dados do clima da região nordeste do país
 clima_centro_oeste_processado.csv | [clima_centro_oeste_processado.csv](https://drive.google.com/file/d/17UMWjVsAyCvOVwGsRVw715647DTJbJNL/view?usp=sharing) | Valores por hora de dados do clima da região centro-oeste do país
+clima_estacoes_meteo.csv | [clima_estacoes_meteo.csv](https://drive.google.com/file/d/1evGeD76T7Wh0AhlWI34NtRSNHVJWzjYg/view?usp=sharing) | Tabela com todas as estações meteorológicas utilizadas
+cidades_brasileiras_editado.csv | [cidades_brasileiras_editado.csv](https://drive.google.com/file/d/1CmzWRbQCrVKaN7g0FZd700IVHFEL2VLS/view?usp=sharing) | Tabela com a geolocalização (latitude e longitude) de grande parte das cidades brasileiras
+IBGE_Municipios.csv | [IBGE_Municipios.csv](https://drive.google.com/file/d/1ldijywxW7ZrC3Z-iYX8URVYC7C--h_Mz/view?usp=sharing) | Tabela com o código IBGE de cada município brasileiro, além de outras informações geográficas regionais
 
 ## Bases de Dados
 
@@ -77,19 +80,22 @@ Otimização necessária em Python para a conversão do código do IBGE para nom
             srag_full['ID_MUNICIP'][i] = municipdict[int(srag_full['ID_MUNICIP'][i])]
 ~~~
 
-> Se usar Orange para alguma análise, você pode apresentar uma captura do workflow, como o exemplo a seguir e descrevê-lo:
-![Workflow no Orange](images/orange-zombie-meals-prediction.png)
+[Tratamento do DataSUS e dados geográficos](src/dataSUS.py)
 
-> Coloque um link para o arquivo do notebook, programas ou workflows que executam as operações que você apresentar.
+[Tratamento dos dados do clima e estações metereológicas](src/dados_climaticos.py)
 
-> Aqui devem ser apresentadas as operações de construção do dataset:
-* extração de dados de fontes não estruturadas como, por exemplo, páginas Web
-* agregação de dados fragmentados obtidos a partir de API
-* integração de dados de múltiplas fontes
-* tratamento de dados
-* transformação de dados para facilitar análise e pesquisa
+* Extração de dados de fontes online (DataSUS, IBGE, Kaggle, INMET, ...)
+* Integração de fontes de dados diferentes
+  * Nomes de cidades a partir de códigos do IBGE
+  * Obtenção de coordenadas geográficas a partir do nome de cidades
+* Tratamento de dados
+  * Remoção de cidades inválidas
+  * Remoção de dados metereológicos faltantes/inconsistentes
+* Transformação de dados
+  * Agrupamento de 24 dados por hora para 1 dado equivalente ao dia todo4
+  * Padronização de dados em string
+  * Remoção de colunas redundantes e não condizentes ao nosso banco
 
-> Se for notebook, ele estará dentro da pasta `notebook`. Se por alguma razão o código não for executável no Jupyter, coloque na pasta `src` (por exemplo, arquivos do Orange ou Cytoscape). Se as operações envolverem queries executadas atraves de uma interface de um SGBD não executável no Jupyter, como o Cypher, apresente na forma de markdown.
 
 ## Evolução do Projeto
 
