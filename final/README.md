@@ -19,7 +19,7 @@ O data set consiste em um banco de dados relacional que agrega, Dados climaticos
 
 ## Modelos Lógicos
 ~~~
-SRAG(_id_, ID_MUNICIP, SEM_NOT, SG_UF_NOT, DT_SIN_PRI, DT_NASC, NU_IDADE_N, CS_SEXO, CS_GESTANT, CS_RACA, CS_ESCOL_N, SG_UF, ID_MN_RESI, ID_OCUPA_N, VACINA,
+SRAG(_id_, DT_NOTIFIC, ID_MUNICIP, SEM_NOT, SG_UF_NOT, DT_SIN_PRI, DT_NASC, NU_IDADE_N, CS_SEXO, CS_GESTANT, CS_RACA, CS_ESCOL_N, SG_UF, ID_MN_RESI, ID_OCUPA_N, VACINA,
 	FEBRE, TOSSE, CALAFRIO, DISPNEIA, GARGANTA, ARTRALGIA, MIALGIA, CONJUNTIV, CORIZA, DIARREIA, OUTRO_SIN, OUTRO_DES, CARDIOPATI, PNEUMOPATI, RENAL, HEMOGLOBI,
 	IMUNODEPRE, TABAGISMO, METABOLICA, OUT_MORBI, MORB_DESC, HOSPITAL, DT_INTERNA, CO_UF_INTE, CO_MU_INTE, DT_PCR, PCR_AMOSTR, PCR_OUT, PCR_RES, PCR_ETIOL,
 	PCR_TIPO_H, PCR_TIPO_N, DT_CULTURA, CULT_AMOST, CULT_OUT, CULT_RES, DT_HEMAGLU, HEMA_RES, HEMA_ETIOL, HEM_TIPO_H, HEM_TIPO_N, DT_RAIOX, RAIOX_RES, RAIOX_OUT,
@@ -125,11 +125,11 @@ Uma das dificuldades encontradas estava relacionada ao grande volume de dados no
 
 Com essa pergunta, queremos confirmar a informação já sabida de que problemas respiratórios como a gripe ocorrem mais durante o inverno. Para responder essa pergunta, realizamos o seguinte processo:
 
-- Convertemos cada entrada de data da tabela SRAG para segundos desde a epoch, criando a coluna "data". Essa etapa foi realizado em Python.
+- Convertemos cada entrada de 'DT_NOTIFIC' da tabela SRAG para segundos desde a epoch, criando a coluna "DATA". Essa etapa foi realizado em Python.
 - Extraímos todas as entradas que relatam febre, tosse ou dor de garganta:
 
 ```sql
-SELECT * FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1;
+SELECT DATA FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1
 ```
 
 - Montamos um histograma das ocorrências. Essa etapa foi realizada em Python.
