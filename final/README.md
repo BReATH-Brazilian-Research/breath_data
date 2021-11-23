@@ -148,7 +148,7 @@ Com isso, conseguimos confirmar a informação conhecida, problemas respiratóri
 Para responder essa pergunta, realizamos a seguinte query:
 
 ```sql
-SELECT COUNT(nome_do_sintoma) FROM SRAG WHERE nome_do_sintoma = 1
+SELECT COUNT(<nome_do_sintoma>) FROM SRAG WHERE <nome_do_sintoma> = 1
 ```
 Alterando *nome_do_sintoma*, que é um dos possíveis sintomas na base:
 
