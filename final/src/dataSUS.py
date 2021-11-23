@@ -43,14 +43,14 @@ def add_data_relational(db, df = None, csv = None):
 	if df is None and csv is not None:
 		df = pd.read_csv(csv)
 
-	if len(df.columns) >= 108:
+	if len(df.columns) >= 109:
 		df.drop(df.columns[0], axis=1, inplace=True)
 	
 	for data in df.values:
 		i+=1
 		query = """
 		INSERT INTO SRAG
-		(ID_MUNICIP ,SEM_NOT ,SG_UF_NOT ,DT_SIN_PRI ,DT_NASC ,NU_IDADE_N ,CS_SEXO ,CS_GESTANT ,
+		(DT_NOTIFIC, ID_MUNICIP ,SEM_NOT ,SG_UF_NOT ,DT_SIN_PRI ,DT_NASC ,NU_IDADE_N ,CS_SEXO ,CS_GESTANT ,
 		CS_RACA ,CS_ESCOL_N ,SG_UF ,ID_MN_RESI ,ID_OCUPA_N ,VACINA ,FEBRE ,TOSSE ,CALAFRIO ,DISPNEIA ,
 		GARGANTA ,ARTRALGIA ,MIALGIA ,CONJUNTIV ,CORIZA ,DIARREIA ,OUTRO_SIN ,OUTRO_DES ,CARDIOPATI ,
 		PNEUMOPATI ,RENAL ,HEMOGLOBI ,IMUNODEPRE ,TABAGISMO ,METABOLICA ,OUT_MORBI ,MORB_DESC ,HOSPITAL ,
