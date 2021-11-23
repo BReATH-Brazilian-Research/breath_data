@@ -129,7 +129,7 @@ Com essa pergunta, queremos confirmar a informação já sabida de que problemas
 - Extraímos todas as entradas que relatam febre, tosse ou dor de garganta:
 
 ```sql
-SELECT DT_NOTIFIC FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1
+SELECT DATA FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1
 ```
 
 - Montamos um histograma das ocorrências. Essa etapa foi realizada em Python.
