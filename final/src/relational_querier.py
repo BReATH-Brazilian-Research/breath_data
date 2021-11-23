@@ -27,39 +27,38 @@ class RelationalQuerier:
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS Sintomas(
-			Id INTEGER PRIMARY KEY,
+			Id INTEGER PRIMARY KEY AUTOINCREMENT,
 			Tipo TEXT,
 			Ano INTEGER,
 			Mês INTEGER,
 			Dia INTEGER,
-			Cidade TEXT,
-			FOREIGN KEY (Paciente) REFERENCES from SRAG(NM_PACIENT))
+			Cidade TEXT)
 			""")
 
 		# create Cidades
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS Cidades(
-			Id INTEGER PRIMARY KEY,
+			Id INTEGER PRIMARY KEY AUTOINCREMENT,
 			UF TEXT,
 			Nome_UF TEXT,
-			Mesorregião Geográfica TEXT,
-			Nome_Mesorregião TEXT,
-			Microrregião Geográfica TEXT,
-			Nome_Microrregião TEXT,
-			Município TEXT,
-			Código Município Completo TEXT,
-			Nome_Município TEXT,
+			Mesorregiao_geografica TEXT,
+			Nome_mesorregiao TEXT,
+			Microrregiao_geografica TEXT,
+			Nome_Microrregiao TEXT,
+			Municipio TEXT,
+			Cod_municipio TEXT,
+			Nome_municipio TEXT,
 			lat TEXT,
-			lon TEXT
+			lon TEXT)
 			""")
 
 		# create Estacoes
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS Estacoes(
-			Id INTEGER PRIMARY KEY,
-			Stacao TEXT,
+			Id INTEGER PRIMARY KEY AUTOINCREMENT,
+			Estacao TEXT,
 			Regiao TEXT,
 			UF TEXT,
 			Codigo TEXT,
@@ -73,7 +72,7 @@ class RelationalQuerier:
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS Clima(
-			id INTEGER PRIMARY KEY,
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			date DATE,
 			precipitacao REAL,
 			pressao_at_max REAL,
@@ -95,7 +94,7 @@ class RelationalQuerier:
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS SRAG(
-			id INTEGER PRIMARY KEY,
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			ID_MUNICIP TEXT,
 			SEM_NOT TEXT,
 			SG_UF_NOT TEXT,
@@ -204,7 +203,8 @@ class RelationalQuerier:
 			RES_FLUASU TEXT,
 			DT_UT_DOSE TEXT)
 			""")
-
+		
+		# create table SRAG
 		self.conn.commit()
 
 	def query(self, query:str, values:str = None) -> Tuple[bool, Union[List[Dict[str, str]], None]]:
@@ -213,7 +213,7 @@ class RelationalQuerier:
 		result = None
 		try:
 			if values is not None:
-				values = tuple(values[1:])
+				values = tuple(values)
 				self.c.execute(query, values)
 			else:
 				result = self.c.execute(query)

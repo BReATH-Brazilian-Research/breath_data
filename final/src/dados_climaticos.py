@@ -8,7 +8,9 @@ from relational_querier import RelationalQuerier
 
 # os dados climaticos brutos foram baixados diretamente do link: https://www.kaggle.com/PROPPG-PPG/hourly-weather-surface-brazil-southeast-region
 abbreviation = ['date','precipitacao','pressao_at_max', 'pressao_at_min', 'radiacao', 'temp_max','temp_min','umidade','max_vent','velocidade_vent','region','state','station','lat','lon','elvt']
+
 db = RelationalQuerier()
+
 def format_csv(file_name):
 	f1=open(file_name,"r+")
 	input=f1.read()
@@ -78,8 +80,12 @@ def add_data_relational(db, df = None, csv = None):
 
 	if df is None and csv is not None:
 		df = pd.read_csv(csv)
-	for data in df.values:
+		
+	if len(df.columns) >= 17:
+		df.drop(df.columns[0], axis=1, inplace=True)
 
+	for data in df.values:
+		print(data)
 		query = """
 		INSERT INTO Clima
 		(date,precipitacao,pressao_at_max, pressao_at_min, radiacao,
@@ -95,10 +101,9 @@ def add_data_relational_stations(db, df = None, csv = None):
 	if df is None and csv is not None:
 		df = pd.read_csv(csv)
 	for data in df.values:
-
 		query = """
 		INSERT INTO Estacoes
-		(Stacao,Regiao,UF,Codigo,Prim_data,alt,lon,lat)
+		(Estacao,Regiao,UF,Codigo,Prim_data,alt,lon,lat)
 		VALUES(?,?,?,?,?,?,?,?);"""
 
 		result = db.query(query, data)
@@ -112,22 +117,22 @@ if __name__ == "__main__":
 	# para cada um dos arquivos
 	for file in files:
 		name = file.split('/')[-1].split('.')[0]
-
-		if name in ["central_west.csv, north.csv, northeast.csv, south.csv, southeast.csv"]:
-			print('arquivo nao formatado, iniciando limpeza de arquivo', posfix)
+		print("processando arquivo:",name)
+		if name in ["central_west", "north", "northeast", "south", "southeast"]:
+			print('arquivo nao formatado, iniciando limpeza de arquivo', name)
 			df, new_file_name = clean(file)
 			print(f'Dados tratados estao no arquivo {new_file_name} na mesma pasta dos originais')
-			add_data_relational(db, df = df)
 
 		# caso contrario apenas adicione no banco de dados
-		elif name in ["central_west_clean.csv, north_clean.csv, northeast_clean.csv, south_clean.csv, southeast_clean.csv"]:
+		elif name in ["central_west_clean", "north_clean", "northeast_clean", "south_clean", "southeast_clean"]:
 			print('arquivo formatado, iniciando insercao no banco de dados')
 			# only uncomment if you want do use the databses
 			add_data_relational(db, csv = file)
 		
-		elif name == 'stations.csv':
+		elif name == 'stations':
 			add_data_relational_stations(db, csv = file)
 
+		print('processamento e insercao concluidos\n')
 	# veja se a insercao deu certo
 	query = 'SELECT * FROM Clima;'
 	result = db.query(query)

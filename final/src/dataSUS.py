@@ -4,6 +4,7 @@ from relational_querier import RelationalQuerier
 
 # Loads dadtaSUS info into a single .csv
 def loadcsv():
+	print('baixando os dados')
 	srag_2013 = pd.read_csv(
 		"https://opendatasus.saude.gov.br/dataset/e6b03178-551c-495c-9935-adaab4b2f966/resource/4919f202-083a-4fac-858d-99fdf1f1d765/download/influd13_limpo_final.csv",
 		sep=';', encoding='cp1252', dtype=str)
@@ -31,15 +32,20 @@ def loadcsv():
 
 # Generates a .csv and saves it for quicker reruns
 def gencsv():
+	print('gerando o csv')
 	srag_full = loadcsv()
 	srag_full.to_csv("srag_full.csv", index=True)
 	print("srag_full.csv has been successfully generated")
 
 def add_data_relational(db, df = None, csv = None):
-
+	print('adicionando os dados ao banco SRAG')
+	i = 0
 	if df is None and csv is not None:
 		df = pd.read_csv(csv)
-		i = 0
+
+	if len(df.columns) >= 108:
+		df.drop(df.columns[0], axis=1, inplace=True)
+	
 	for data in df.values:
 		i+=1
 		query = """
@@ -64,26 +70,32 @@ def add_data_relational(db, df = None, csv = None):
 		print(i)
 	db.commit()
 
-def add_data_relational_cities(db, df = None, city = None, geo = None):
-
-	if df is None and city is not None:
-		city = pd.read_csv(city)
-
-	if df is None and geo is not None:
-		geo = pd.read_csv(geo)
-		i = 0
+def add_data_relational_cities(db, city = None, geo = None):
+	print('adicionando os dados ao banco Cidades')
+	city = pd.read_csv(city)
+	geo = pd.read_csv(geo)
+	i = 0
 
 	geo = geo.rename(columns={"ID_MUNICIP":"Nome_Município"})
-	geo.drop(['Unnamed: 0','Unnamed: 0.1'], axis=1, inplace=True)
+
+	if 'Unnamed: 0' in geo.columns:
+		geo.drop('Unnamed: 0', axis=1, inplace=True)
+	
+	if 'Unnamed: 0.1' in geo.columns:
+		geo.drop('Unnamed: 0.1', axis=1, inplace=True)
 
 	df = pd.merge(city, geo, on='Nome_Município', how='left')
+
+	
+	if len(df.columns) >= 12:
+		df.drop(df.columns[0], axis=1, inplace=True)
 
 	for data in df.values:
 		i+=1
 		query = """
 		INSERT INTO Cidades
-		(UF,Nome_UF,Mesorregião Geográfica,Nome_Mesorregião,Microrregião Geográfica,
-		Nome_Microrregião,Município,Código Município Completo,Nome_Município,lat,lon)
+		(UF,Nome_UF,Mesorregiao_geografica,Nome_mesorregiao,Microrregiao_geografica,
+		Nome_Microrregiao,Municipio,Cod_municipio,Nome_municipio,lat,lon)
 		VALUES(?,?,?,?,?,?,?,?,?,?,?);"""
 
 		result = db.query(query, data)
@@ -126,7 +138,6 @@ def main():
 
 	return srag_full, IBGE
 
-
 if __name__ == '__main__':
 
 	try:
@@ -135,4 +146,4 @@ if __name__ == '__main__':
 		srag_full, IBGE = main()
 	print('adicionando dados')
 	add_data_relational(db, df = srag_full)
-	add_data_relational_cities(db, df = IBGE)
+	add_data_relational_cities(db, city = "IBGE_Municipios.csv", geo = "cidades_geo.csv")
