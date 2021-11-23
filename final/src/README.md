@@ -1,6 +1,6 @@
 # Instruções de uso do dataSUS.py
 
-* o lagoritmo depende dos arquivos `cidades_geo.csv` e `IBGE_Municipios.csv` que devem ser encontrados na mesma pasta `final/src`
+* O alagoritmo depende dos arquivos `cidades_geo.csv` e `IBGE_Municipios.csv` que devem ser encontrados na mesma pasta `final/src`
 * Para ultilizar o script basta digitar o comando `python dataSUS.py` no diretório em que o arquivo se encontra.
 * Rodar o script com -gencsv no terminal para gerar a tabela .csv intermediária
 * Isso garante uma execução repetida mais rápida pois remove a necessidade de realizar os requests para o dataSUS novamente
