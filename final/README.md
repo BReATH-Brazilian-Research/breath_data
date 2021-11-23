@@ -28,16 +28,13 @@ SRAG(_id_, ID_MUNICIP, SEM_NOT, SG_UF_NOT, DT_SIN_PRI, DT_NASC, NU_IDADE_N, CS_S
 	OBESIDADE, PUERPERA, SIND_DOWN, RES_FLUA, RES_FLUB, UTI, IFI, PCR, RES_OUTRO, OUT_METODO, RES_PARA1, RES_PARA2, RES_PARA3, DESC_RESP, SATURACAO, ST_TIPOFI, 
 	TIPO_PCR, ANTIVIRAL, SUPORT_VEN, RES_VSR, RES_FLUASU, DT_UT_DOSE)
 
-CLIMA(_id_, date, precipitacao , pressao_at_max , pressao_at_min , radiacao , temp_max , temp_min , umidade , max_vent , velocidade_vent , region , state , 
-	station , lat , lon , elvt)
+CLIMA(_id_, date, precipitacao, pressao_at_max, pressao_at_min, radiacao, temp_max, temp_min, umidade, max_vent, velocidade_vent, region, state, 
+	station, lat, lon, elvt)
 
-Sintomas(_Id_, Tipo, Ano, Mes, Dia, Cidade, Paciente)
-	Paciente chave estrangeira -> SRAG(id)
+Estacoes(_Id_, Stacao, Regiao, UF, Codigo, Prim_data, alt, lon, lat)
 
-Estacoes(_Id_,Stacao,Regiao,UF,Codigo,Prim_data,alt,lon,lat)
-
-Cidades(_Id_,UF,Nome_UF,Mesorregião Geográfica,Nome_Mesorregião,Microrregião Geográfica,Nome_Microrregião,
-	Município,Código Município Completo,Nome_Município,lat,lon)
+Cidades(_Id_, UF, Nome_UF, Mesorregião Geográfica, Nome_Mesorregião, Microrregião Geográfica, Nome_Microrregião,
+	Município, Código Município Completo, Nome_Município, lat, lon)
 ~~~
 
 
