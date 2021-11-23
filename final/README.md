@@ -142,10 +142,24 @@ Com isso, conseguimos confirmar a informação conhecida, problemas respiratóri
 
 
 #### Pergunta/Análise 2
-> * Pergunta 2
->   
->   * Explicação sucinta da análise que será feita e conjunto de queries que
->     responde à pergunta.
+**Quais os sintomas mais comuns?**
+
+
+Para responder essa pergunta, realizamos a seguinte query:
+
+```sql
+SELECT COUNT(nome_do_sintoma) FROM SRGA WHERE nome_do_sintoma = 1
+```
+Alterando *nome_do_sintoma*, que é um dos possíveis sintomas na base:
+
+- FEBRE
+- TOSSE
+- GARGANTA
+- DISPNEIA
+- MIALGIA
+- SATURACAO
+- DESC_RESP
+
 
 #### Pergunta/Análise 3
 > * Pergunta 3
