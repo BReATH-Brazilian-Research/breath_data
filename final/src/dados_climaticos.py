@@ -90,6 +90,20 @@ def add_data_relational(db, df = None, csv = None):
 		result = db.query(query, data)
 	db.commit()
 
+def add_data_relational_stations(db, df = None, csv = None):
+
+	if df is None and csv is not None:
+		df = pd.read_csv(csv)
+	for data in df.values:
+
+		query = """
+		INSERT INTO Estacoes
+		(Stacao,Regiao,UF,Codigo,Prim_data,alt,lon,lat)
+		VALUES(?,?,?,?,?,?,?,?);"""
+
+		result = db.query(query, data)
+	db.commit()
+
 if __name__ == "__main__":
 	# le o caminho do arquivo
 	Tk().withdraw()
@@ -97,20 +111,22 @@ if __name__ == "__main__":
 	print(files)
 	# para cada um dos arquivos
 	for file in files:
-		posfix = file.split('/')[-1].split('_')[-1].split('.')[0]
+		name = file.split('/')[-1].split('.')[0]
 
-		# se o arquivo nao tem nome [*]_clean.csv limpe-o
-		if posfix != 'clean':
+		if name in ["central_west.csv, north.csv, northeast.csv, south.csv, southeast.csv"]:
 			print('arquivo nao formatado, iniciando limpeza de arquivo', posfix)
 			df, new_file_name = clean(file)
 			print(f'Dados tratados estao no arquivo {new_file_name} na mesma pasta dos originais')
 			add_data_relational(db, df = df)
 
 		# caso contrario apenas adicione no banco de dados
-		else:
+		elif name in ["central_west_clean.csv, north_clean.csv, northeast_clean.csv, south_clean.csv, southeast_clean.csv"]:
 			print('arquivo formatado, iniciando insercao no banco de dados')
 			# only uncomment if you want do use the databses
 			add_data_relational(db, csv = file)
+		
+		elif name == 'stations.csv':
+			add_data_relational_stations(db, csv = file)
 
 	# veja se a insercao deu certo
 	query = 'SELECT * FROM Clima;'

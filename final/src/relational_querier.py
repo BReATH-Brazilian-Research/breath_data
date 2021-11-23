@@ -33,9 +33,40 @@ class RelationalQuerier:
 			Mês INTEGER,
 			Dia INTEGER,
 			Cidade TEXT,
-			Paciente FOREIGN_KEY)
+			FOREIGN KEY (Paciente) REFERENCES from SRAG(NM_PACIENT))
 			""")
 
+		# create Cidades
+		self.c.execute(
+			"""
+			CREATE TABLE IF NOT EXISTS Cidades(
+			Id INTEGER PRIMARY KEY,
+			UF TEXT,
+			Nome_UF TEXT,
+			Mesorregião Geográfica TEXT,
+			Nome_Mesorregião TEXT,
+			Microrregião Geográfica TEXT,
+			Nome_Microrregião TEXT,
+			Município TEXT,
+			Código Município Completo TEXT,
+			Nome_Município TEXT,
+			""")
+
+		# create Estacoes
+		self.c.execute(
+			"""
+			CREATE TABLE IF NOT EXISTS Estacoes(
+			Id INTEGER PRIMARY KEY,
+			Stacao TEXT,
+			Regiao TEXT,
+			UF TEXT,
+			Codigo TEXT,
+			Prim_data TEXT,
+			alt REAL,
+			lon REAL,
+			lat REAL)
+			""")
+		
 		# create table Clima
 		self.c.execute(
 			"""

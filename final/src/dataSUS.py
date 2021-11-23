@@ -64,6 +64,23 @@ def add_data_relational(db, df = None, csv = None):
 		print(i)
 	db.commit()
 
+def add_data_relational_cities(db, df = None, csv = None):
+
+	if df is None and csv is not None:
+		df = pd.read_csv(csv)
+		i = 0
+	for data in df.values:
+		i+=1
+		query = """
+		INSERT INTO Cidades
+		(UF,Nome_UF,Mesorregião Geográfica,Nome_Mesorregião,Microrregião Geográfica,
+		Nome_Microrregião,Município,Código Município Completo,Nome_Município)
+		VALUES(?,?,?,?,?,?,?,?,?);"""
+
+		result = db.query(query, data)
+		print(i)
+	db.commit()
+
 db = RelationalQuerier()
 
 def main():
@@ -98,7 +115,7 @@ def main():
 	srag_full.drop(['NU_ANO', 'SRAG2014FINAL', 'SRAG2015FINAL', 'SRAG2012FINAL', 'SRAG2017FINAL', 'SRAG2018FINAL'], axis = 1, inplace = True)
 	srag_full.to_csv("srag_full_cities.csv")
 
-	return srag_full
+	return srag_full, IBGE
 
 
 if __name__ == '__main__':
@@ -106,6 +123,7 @@ if __name__ == '__main__':
 	try:
 		srag_full = pd.read_csv("srag_full_cities.csv")
 	except FileNotFoundError:
-		main()
+		srag_full, IBGE = main()
 	print('adicionando dados')
 	add_data_relational(db, df = srag_full)
+	add_data_relational_cities(db, df = IBGE)
