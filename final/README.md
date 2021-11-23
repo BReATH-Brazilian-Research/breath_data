@@ -120,10 +120,26 @@ Uma das dificuldades encontradas estava relacionada ao grande volume de dados no
 > ![Comunidade no Cytoscape](images/cytoscape-comunidade.png)
 
 #### Pergunta/Análise 1
-> * Pergunta 1
->   
->   * Explicação sucinta da análise que será feita e conjunto de queries que
->     responde à pergunta.
+
+**Existe alguma sazonalidade nos sintomas relacionados a problemas respiratórios?**
+
+Com essa pergunta, queremos confirmar a informação já sabida de que problemas respiratórios como a gripe ocorrem mais durante o inverno. Para responder essa pergunta, realizamos o seguinte processo:
+
+- Convertemos cada entrada de data da tabela SRAG para segundos desde a epoch, criando a coluna "data". Essa etapa foi realizado em Python.
+- Extraímos todas as entradas que relatam febre, tosse ou dor de garganta:
+
+```sql
+SELECT FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1
+```
+
+- Montamos um histograma das ocorrências. Essa etapa foi realizada em Python.
+
+![](assets/pergunta1_1.png)
+
+Analisando o histograma, podemos observar que os casos se concentram em momentos específicos dos 6 anos representados, mais especificamente no meio deles. Como os dados foram obtidos no Brasil, esse período se refere ao inverno.
+
+Com isso, conseguimos confirmar a informação conhecida, problemas respiratórios são mais presentes durante o inverno.
+
 
 #### Pergunta/Análise 2
 > * Pergunta 2
