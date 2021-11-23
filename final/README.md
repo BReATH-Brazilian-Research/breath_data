@@ -125,7 +125,7 @@ Uma das dificuldades encontradas estava relacionada ao grande volume de dados no
 
 Com essa pergunta, queremos confirmar a informação já sabida de que problemas respiratórios como a gripe ocorrem mais durante o inverno. Para responder essa pergunta, realizamos o seguinte processo:
 
-- Convertemos cada entrada de data da tabela SRAG para segundos desde a epoch, criando a coluna "data". Essa etapa foi realizado em Python.
+- Convertemos cada entrada de 'DT_NOTIFIC' da tabela SRAG para segundos desde a epoch, criando a coluna "DATA". Essa etapa foi realizado em Python.
 - Extraímos todas as entradas que relatam febre, tosse ou dor de garganta:
 
 ```sql
