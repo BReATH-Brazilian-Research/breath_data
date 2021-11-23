@@ -31,9 +31,6 @@ SRAG(_id_, ID_MUNICIP, SEM_NOT, SG_UF_NOT, DT_SIN_PRI, DT_NASC, NU_IDADE_N, CS_S
 CLIMA(_id_, date, precipitacao , pressao_at_max , pressao_at_min , radiacao , temp_max , temp_min , umidade , max_vent , velocidade_vent , region , state , 
 	station , lat , lon , elvt)
 
-Sintomas(_Id_, Tipo, Ano, Mes, Dia, Cidade, Paciente)
-	Paciente chave estrangeira -> SRAG(id)
-
 Estacoes(_Id_,Stacao,Regiao,UF,Codigo,Prim_data,alt,lon,lat)
 
 Cidades(_Id_,UF,Nome_UF,Mesorregião Geográfica,Nome_Mesorregião,Microrregião Geográfica,Nome_Microrregião,
