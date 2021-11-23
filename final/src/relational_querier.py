@@ -50,6 +50,8 @@ class RelationalQuerier:
 			Município TEXT,
 			Código Município Completo TEXT,
 			Nome_Município TEXT,
+			lat TEXT,
+			lon TEXT
 			""")
 
 		# create Estacoes

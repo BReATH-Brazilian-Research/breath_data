@@ -9,7 +9,7 @@
 * baixar as tabelas de [registros de tempo](https://www.kaggle.com/PROPPG-PPG/hourly-weather-surface-brazil-southeast-region)
 
 * Executar o script `clima.py` em python navegando até a pasta do arquivo e digitando o comando `python clima.py`
-* Após o início da solução deverá selecionar, pela interface que aparecer, um dos arquivos de clima dos que foram baixados (`north.csv`, `northeast.csv`, `south.csv`, `southeast.csv`, `center_west.csv`).
+* Após o início da solução deverá selecionar, pela interface que aparecer, um dos arquivos de clima dos que foram baixados (`north.csv`, `northeast.csv`, `south.csv`, `southeast.csv`, `center_west.csv`, `stations.csv`).
 * O script limpará os dados e os colocará no banco de dados local, além de exportar as tabelas tratadas com o mesmo nome do arquivo de entrada, junto com o prefixo `_clean`.
 
 

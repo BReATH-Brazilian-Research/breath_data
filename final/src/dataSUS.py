@@ -64,18 +64,27 @@ def add_data_relational(db, df = None, csv = None):
 		print(i)
 	db.commit()
 
-def add_data_relational_cities(db, df = None, csv = None):
+def add_data_relational_cities(db, df = None, city = None, geo = None):
 
-	if df is None and csv is not None:
-		df = pd.read_csv(csv)
+	if df is None and city is not None:
+		city = pd.read_csv(city)
+
+	if df is None and geo is not None:
+		geo = pd.read_csv(geo)
 		i = 0
+
+	geo = geo.rename(columns={"ID_MUNICIP":"Nome_Município"})
+	geo.drop(['Unnamed: 0','Unnamed: 0.1'], axis=1, inplace=True)
+
+	df = pd.merge(city, geo, on='Nome_Município', how='left')
+
 	for data in df.values:
 		i+=1
 		query = """
 		INSERT INTO Cidades
 		(UF,Nome_UF,Mesorregião Geográfica,Nome_Mesorregião,Microrregião Geográfica,
-		Nome_Microrregião,Município,Código Município Completo,Nome_Município)
-		VALUES(?,?,?,?,?,?,?,?,?);"""
+		Nome_Microrregião,Município,Código Município Completo,Nome_Município,lat,lon)
+		VALUES(?,?,?,?,?,?,?,?,?,?,?);"""
 
 		result = db.query(query, data)
 		print(i)
