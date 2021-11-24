@@ -11,6 +11,11 @@ abbreviation = ['date','precipitacao','pressao_at_max', 'pressao_at_min', 'radia
 
 db = RelationalQuerier()
 
+def d(x):
+      y=x.split('-')
+      y.reverse()
+      return '/'.join(y)
+
 def format_csv(file_name):
 	f1=open(file_name,"r+")
 	input=f1.read()
@@ -53,6 +58,7 @@ def clean(file_name):
 	df_final = reduce(lambda left,right: pd.merge(left,right,on='Data'), clmns)
 	df_final.columns = abbreviation
 
+	df_final['date'] = df_final['date'].map(x:d(x))
 	new_file_name = file_name.split('.')[0]+'_clean.'+file_name.split('.')[1]
 	print(new_file_name)
 
