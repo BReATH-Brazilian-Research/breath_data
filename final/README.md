@@ -102,10 +102,10 @@ Para os dados climáticos estavamos durante um tempo considerando sua representa
 
 Uma das dificuldades encontradas estava relacionada ao grande volume de dados no qual trabalhamos. Especificamente a tabela de dados do SUS possuí mais de 200 mil linhas, o que tornava muito lento seu tratamento. Quando realizado a operação de troca do código do IBGE para o nome por escrito da cidade, utilizar uma solução simples como 2 loops encadiados simplesmente não funcionava devido à seu alto tempo de execução (O(m\*n)), para isso foi criado uma otimização, como mostrado no capítulo de detalhamento acima, onde transformamos sua execução, através da construção de uma estrutura de dicionário, em O(m+n). 
 
+Já para a análise, o grande volume de dados foi um problema. Muitos ambientes tem um limite de tamanho de arquivos que conseguem rodar, e muitas os nossos estavam muito além destes limites, além de que, para rodar nossos algoritmos em nossa própria máquina, estes muitas vezes eram lentos devido à este mesmo volume de manipulação de dados. Além disso, para a visualização dos dados geográficos brasileiros, encontrar a documentação sobre plotting e leitura destes dados é difícil e muito escassa.
 
-> Relatório de evolução, descrevendo as evoluções na modelagem do projeto, dificuldades enfrentadas, mudanças de rumo, melhorias e lições aprendidas. Referências aos diagramas, modelos e recortes de mudanças são bem-vindos.
-> Podem ser apresentados destaques na evolução dos modelos conceitual e lógico. O modelo inicial e intermediários (quando relevantes) e explicação de refinamentos, mudanças ou evolução do projeto que fundamentaram as decisões.
-> Relatar o processo para se alcançar os resultados é tão importante quanto os resultados.
+Para a criação do banco de dados em SQL em si, o volume de dados foi novamente o maior problema, causando crashes no sistema devido ao alto consumo de memória e demorando muito tempo para finalizar sua execução.
+
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
 ### Perguntas/Análise com Resposta Implementada
