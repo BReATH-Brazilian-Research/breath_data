@@ -118,7 +118,7 @@ Com essa pergunta, queremos confirmar a informação já sabida de que problemas
 - Extraímos todas as entradas que relatam febre, tosse ou dor de garganta:
 
 ```sql
-SELECT DT_NOTIFIC FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1;
+SELECT DT_NOTIFIC FROM SRAG WHERE TOSSE = "1.0" OR FEBRE = "1.0" OR GARGANTA = "1.0";
 ```
 
 - Convertemos cada entrada de data da tabela SRAG para segundos desde a epoch, criando a coluna "data". Essa etapa foi realizado em Python.
@@ -138,13 +138,13 @@ Com isso, conseguimos confirmar a informação conhecida, problemas respiratóri
 Para responder essa pergunta, realizamos a seguinte query:
 
 ```sql
-SELECT COUNT(FEBRE) FROM SRAG WHERE FEBRE = 1;
-SELECT COUNT(TOSSE) FROM SRAG WHERE TOSSE = 1;
-SELECT COUNT(GARGANTA) FROM SRAG WHERE GARGANTA = 1;
-SELECT COUNT(DISPNEIA) FROM SRAG WHERE DISPNEIA = 1;
-SELECT COUNT(MIALGIA) FROM SRAG WHERE MIALGIA = 1;
-SELECT COUNT(SATURACAO) FROM SRAG WHERE SATURACAO = 1;
-SELECT COUNT(DESC_RESP) FROM SRAG WHERE DESC_RESP = 1;
+SELECT COUNT(FEBRE) FROM SRAG WHERE FEBRE = "1.0";
+SELECT COUNT(TOSSE) FROM SRAG WHERE TOSSE = "1.0";
+SELECT COUNT(GARGANTA) FROM SRAG WHERE GARGANTA = "1.0";
+SELECT COUNT(DISPNEIA) FROM SRAG WHERE DISPNEIA = "1.0";
+SELECT COUNT(MIALGIA) FROM SRAG WHERE MIALGIA = "1.0";
+SELECT COUNT(SATURACAO) FROM SRAG WHERE SATURACAO = "1.0";
+SELECT COUNT(DESC_RESP) FROM SRAG WHERE DESC_RESP = "1.0";
 ```
 FEBRE: 169461
 TOSSE: 183489
@@ -159,14 +159,15 @@ Podemos concluir, portanto, que o sintoma mais comum é a tosse.
 #### Pergunta/Análise 3
 **Quais eram os dados climáticos no dia onde houveram mais casos de SRAG?**
 
-Podemos utilizar 3 selects aninhados para conseguir nossa informação, um para contar quantos casos aconteceram por dia, um para selecionar o valor máximo, e um final que encontra está mesma data do banco SRAG e encontra ela no banco clima.
+Podemos utilizar 4 selects aninhados para conseguir nossa informação, um para contar quantos casos aconteceram por dia, um para selecionar o valor máximo, um para manter somente o valor da data, e remover o valor maximo de casos, e um final que encontra está mesma data do banco SRAG e encontra ela no banco clima.
 
 Adicionalmente pode-se querer especificar uma cidade nesta query, já que, da forma que está construída, esta imprimiria todos os dados de cada cidade para este dia.
 
 ```sql
-SELECT * FROM clima WHERE date IN (
-	SELECT DT_NOTIFIC, MAX(cnt) FROM (
-		SELECT DT_NOTIFIC, COUNT(*) as 'cnt' FROM SRAG WHERE FEBRE = 1 GROUP BY DT_NOTIFIC));
+SELECT * FROM clima WHERE date IN ( 
+	SELECT DT_NOTIFIC FROM (
+		SELECT DT_NOTIFIC, MAX(cnt) FROM (
+			SELECT DT_NOTIFIC, COUNT(*) as 'cnt' FROM SRAG WHERE FEBRE = "1.0" GROUP BY DT_NOTIFIC)));
 ```
 
 ### Perguntas/Análise Propostas mas Não Implementadas
