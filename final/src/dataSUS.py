@@ -85,6 +85,8 @@ def add_data_relational_cities(db, city = None, geo = None):
 
 	df = pd.merge(city, geo, on='Nome_Município', how='left')
 
+	df.to_csv("cidades_geo_processado.csv")
+
 	
 	if len(df.columns) >= 12:
 		df.drop(df.columns[0], axis=1, inplace=True)
