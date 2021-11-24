@@ -125,13 +125,13 @@ Uma das dificuldades encontradas estava relacionada ao grande volume de dados no
 
 Com essa pergunta, queremos confirmar a informação já sabida de que problemas respiratórios como a gripe ocorrem mais durante o inverno. Para responder essa pergunta, realizamos o seguinte processo:
 
-- Convertemos cada entrada de 'DT_NOTIFIC' da tabela SRAG para segundos desde a epoch, criando a coluna "DATA". Essa etapa foi realizado em Python.
 - Extraímos todas as entradas que relatam febre, tosse ou dor de garganta:
 
 ```sql
-SELECT DATA FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1
+SELECT DT_NOTIFIC FROM SRAG WHERE TOSSE = 1 OR FEBRE = 1 OR GARGANTA = 1;
 ```
 
+- Convertemos cada entrada de data da tabela SRAG para segundos desde a epoch, criando a coluna "data". Essa etapa foi realizado em Python.
 - Montamos um histograma das ocorrências. Essa etapa foi realizada em Python.
 
 ![](assets/pergunta1_1.png)
@@ -142,10 +142,21 @@ Com isso, conseguimos confirmar a informação conhecida, problemas respiratóri
 
 
 #### Pergunta/Análise 2
-> * Pergunta 2
->   
->   * Explicação sucinta da análise que será feita e conjunto de queries que
->     responde à pergunta.
+**Quais os sintomas mais comuns?**
+
+
+Para responder essa pergunta, realizamos a seguinte query:
+
+```sql
+SELECT COUNT(FEBRE) FROM SRAG WHERE FEBRE = 1;
+SELECT COUNT(TOSSE) FROM SRAG WHERE TOSSE = 1;
+SELECT COUNT(GARGANTA) FROM SRAG WHERE GARGANTA = 1;
+SELECT COUNT(DISPNEIA) FROM SRAG WHERE DISPNEIA = 1;
+SELECT COUNT(MIALGIA) FROM SRAG WHERE MIALGIA = 1;
+SELECT COUNT(SATURACAO) FROM SRAG WHERE SATURACAO = 1;
+SELECT COUNT(DESC_RESP) FROM SRAG WHERE DESC_RESP = 1;
+```
+
 
 #### Pergunta/Análise 3
 > * Pergunta 3
