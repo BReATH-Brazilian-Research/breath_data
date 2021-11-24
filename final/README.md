@@ -170,7 +170,11 @@ SELECT * FROM clima WHERE date IN (
 		SELECT DT_NOTIFIC, MAX(cnt) FROM (
 			SELECT DT_NOTIFIC, COUNT(*) as 'cnt' FROM SRAG WHERE FEBRE = "1.0" GROUP BY DT_NOTIFIC)));
 ```
+date |  precipitacao | pressao_at_max | pressao_at_min | radiacao | temp_max | temp_min | umidade | max_vent | velocidade_vent | region | state | station | lat | lon | elvt
+----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | -----
+11/04/2016 | 24.8 | 1016.9 | 849.3 | 4148 | 36.8 | 12 | 100 | 18.9 | 8.2 | SE | MG | CAPELINHA | -17.70527777 | -42.38916666 | 948
 
+(Foi mostrado apenas uma cidade como ilustração do funcionamento da query pois o resultado completo seria muito grande)
 #### Pergunta/Análise 4
 **Existe alguma sazonalidade nos casos de SRAG?**
 
