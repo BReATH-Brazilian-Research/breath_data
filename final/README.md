@@ -165,8 +165,8 @@ Adicionalmente pode-se querer especificar uma cidade nesta query, já que, da fo
 
 ```sql
 SELECT * FROM clima WHERE date IN (
-	SELECT dt_notific, MAX(cnt) FROM (
-		SELECT dt_notific, COUNT(*) as 'cnt' FROM SRAG WHERE febre = 1 GROUP BY dt_notific));
+	SELECT DT_NOTIFIC, MAX(cnt) FROM (
+		SELECT DT_NOTIFIC, COUNT(*) as 'cnt' FROM SRAG WHERE FEBRE = 1 GROUP BY DT_NOTIFIC));
 ```
 
 ### Perguntas/Análise Propostas mas Não Implementadas
