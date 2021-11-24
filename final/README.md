@@ -170,42 +170,55 @@ SELECT * FROM clima WHERE date IN (
 		SELECT DT_NOTIFIC, MAX(cnt) FROM (
 			SELECT DT_NOTIFIC, COUNT(*) as 'cnt' FROM SRAG WHERE FEBRE = "1.0" GROUP BY DT_NOTIFIC)));
 ```
-date |  precipitacao | pressao_at_max | pressao_at_min | radiacao | temp_max | temp_min | umidade | max_vent | velocidade_vent | region | state | station | lat | lon | elvt
------ | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | -----
-11/04/2016 | 24.8 | 1016.9 | 849.3 | 4148 | 36.8 | 12 | 100 | 18.9 | 8.2 | SE | MG | CAPELINHA | -17.70527777 | -42.38916666 | 948
-
-(Foi mostrado apenas uma cidade do output devido ao seu grande volume)
 
 #### Pergunta/Análise 4
-**Existe alguma sazonalidade nos casos de srag?**
+**Existe alguma sazonalidade nos casos de SRAG?**
 
 Com essa pergunta, confirmamos que o aspecto sazonal se aplica aos casos de SRAG como todo, e não só aos relacionados com sintomas gripais.
-Confirmamos essa relação analisando a distribuição temporal do número de entradas por todo o período e a distribuição geográfica dos casos pelo Brasil em cada estação de 2016.
+
+Confirmamos essa relação analisando a distribuição temporal do número de entradas por todo o período e a distribuição geográfica dos casos pelo Brasil em cada estação de 2016. Os resultados seguem.
+
+![](assets/pergunta4_1.png)
+![](assets/pergunta4_2.png)
+![](assets/pergunta4_3.png)
+![](assets/pergunta4_4.png)
+![](assets/pergunta4_5.png)
+
+
 
 #### Pergunta/Análise 5
 **Os casos se concentram em alguma região geográfica?**
 
 Utilizando visualização de dados e clusterização, conseguimos analisar a distribuição dos casos pelo país.
-Notamos que eles se concentram no Centro-Sul e no próximo ao litoral.
-Contudo, notamos que essas análises não levaram a uma informação relevante, elas apenas evidenciaram a distribuição da população pelo país.
+
+![](assets/pergunta5_1.png)
+
+Assim, notamos que eles se concentram, principalmente, no Centro-Sul e próximo ao litoral.
+Contudo, notamos que essas análises não levaram a uma informação relevante, uma vez que elas apenas evidenciaram a distribuição da população pelo país.
 
 #### Pergunta/Análise 6
 **A idade influencia na Taxa de Mortalidade de SRAG?**
 
 Para cada idade, calculamos a respectiva taxa a partir da coluna de evolução da doença.
+
+![](assets/pergunta6_1.png)
+
 O resultado confirmou que faixas etárias mais idosas apresentam maior taxa de mortalidade.
 
 #### Pergunta/Análise 7
 **Quais são as principais causas de SRAG?**
 
 Contando o número de casos de cada classe, podemos determinar a resposta.
-Para exibir resultados mais relevantes, incluímos apenas os que foram especificados.
+Para exibir resultados mais relevantes, incluímos apenas os que foram especificados (não nulos).
+
+![](assets/pergunta7_1.png)
+
 O gráfico mostra que a maioria dos sintomas são causados por Influenza, seguida de outros vírus respiratórios.
 
 #### Pergunta/Análise 8
 **A vacinação contra influenza influencia na mortalidade?**
 
-Cada linha também informa se o respectivo paciente havia sido vacinado contra influenza.
+Separamos os casos em dois grupos: os que ocorreram em pessoas vacinadas e em não vacinadas.
 Selecionando os casos causados por influenza, comparamos a taxa de mortalidade de cada um, e notamos que os não vacinados apresentam maior mortalidade.
 
 | Grupo Populacional  | Taxa de Mortalidade |
