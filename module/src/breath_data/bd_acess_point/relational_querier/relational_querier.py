@@ -25,6 +25,44 @@ class RelationalQuerier:
 		# create db cursor
 		RelationalQuerier.c = RelationalQuerier.conn.cursor()
 
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Sintoma(
+					Código INT NOT NULL,
+					Ano INT,
+					Mês INT,
+					Dia INT,
+					Cidade FOREIGN_KEY,
+					Tipo TEXT,
+					PRIMARY KEY (Código))""")
+
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS PacienteSintoma(
+					Paciente FOREIGN_KEY,
+					Sintoma FOREIGN_KEY)""")
+
+
+			# create table usuarios
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Usuários(
+					Código INT NOT NULL,
+					Nome TEXT,
+					Idade INT,
+					PRIMARY KEY (Código))""")
+
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Cidades(
+					Nome TEXT,
+					UF INT,
+					Código INT NOT NULL,
+					PRIMARY KEY (Código))""")
+
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Pacientes(
+					Código INT NOT NULL,
+					Sexo TEXT,
+					Diagnóstico FOREIGN_KEY,
+					PRIMARY KEY (Código))""")
+
+		RelationalQuerier.c.execute("""CREATE TABLE IF NOT EXISTS Diagnósticos(
+					Código INT NOT NULL,
+					Diagnóstico TEXT,
+					PRIMARY KEY (Código))""")	
+    
 		# create table Sintomas
 		RelationalQuerier.c.execute(
 			"""
@@ -93,7 +131,7 @@ class RelationalQuerier:
 		"""Executes the desired query and fetch its results if there is any
         """
 		result = None
-		sucess = True
+		sucess = False
 		
 		try:
 			result = RelationalQuerier.c.execute(query).fetchall()
