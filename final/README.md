@@ -43,11 +43,11 @@ Cidades(_Id_, UF, Nome_UF, Mesorregião Geográfica, Nome_Mesorregião, Microrre
 título do arquivo/base | link | breve descrição
 ----- | ----- | -----
 srag_full_cities.csv | [srag_full_cities.csv](https://drive.google.com/file/d/1afwwfCsLYzNcMdGei3BBKOeBc3WGnto-/view?usp=sharing) | Compilação de dados tratados de casos de doenças em postos de saúde SUS ao redor do país de 2013 à 2018, incluindo nome de cidades
-clima_sul_processado.csv | [south_clean.csv](https://drive.google.com/file/d/1-YdoWALSqoHi0WyLKiZDjHvnPWR3_mG4/view?usp=sharing) | Valores por hora de dados do clima da região sul do país
-clima_sudeste_processado.csv | [southeast_clean.csv](https://drive.google.com/file/d/1Omvc9rIAaBSBLg25icULs1HkRQmnwvd4/view?usp=sharing) | Valores por hora de dados do clima da região sudeste do país
-clima_norte_processado.csv | [north_clean.csv](https://drive.google.com/file/d/1mifvSBGct_9FvBBPdS6-cJFq9hZLRtm2/view?usp=sharing) | Valores por hora de dados do clima da região norte do país
-clima_nordeste_processado.csv | [northeast_clean.csv](https://drive.google.com/file/d/1Fge_Z-B-NDOFCWotXum6mralI4U5bD-W/view?usp=sharing) | Valores por hora de dados do clima da região nordeste do país
-clima_centro_oeste_processado.csv | [central_west_clean.csv](https://drive.google.com/file/d/1WWc6DRXzgnIOlyvg7dqzKym1-7Gc3r8Y/view?usp=sharing) | Valores por hora de dados do clima da região centro-oeste do país
+south_clean.csv | [south_clean.csv](https://drive.google.com/file/d/1-YdoWALSqoHi0WyLKiZDjHvnPWR3_mG4/view?usp=sharing) | Valores por dia de dados do clima da região sul do país
+southeast_clean.csv | [southeast_clean.csv](https://drive.google.com/file/d/1Omvc9rIAaBSBLg25icULs1HkRQmnwvd4/view?usp=sharing) | Valores por dia de dados do clima da região sudeste do país
+north_clean.csv.csv | [north_clean.csv](https://drive.google.com/file/d/1mifvSBGct_9FvBBPdS6-cJFq9hZLRtm2/view?usp=sharing) | Valores por dia de dados do clima da região norte do país
+northeast_clean.csv.csv | [northeast_clean.csv](https://drive.google.com/file/d/1Fge_Z-B-NDOFCWotXum6mralI4U5bD-W/view?usp=sharing) | Valores por dia de dados do clima da região nordeste do país
+central_west_clean.csv | [central_west_clean.csv](https://drive.google.com/file/d/1WWc6DRXzgnIOlyvg7dqzKym1-7Gc3r8Y/view?usp=sharing) | Valores por dia de dados do clima da região centro-oeste do país
 clima_estacoes_meteo.csv | [stations.csv](https://drive.google.com/file/d/129yttuUHzRjfvi9QCkPz_da2dwJ3HMQB/view?usp=sharing) | Tabela com todas as estações meteorológicas utilizadas
 cidades_brasileiras_editado.csv | [cidades_geo_processado.csv](https://drive.google.com/file/d/1wFUTVmRqbqK55ULQL_fwXRssCbfTC0RI/view?usp=sharing) | Tabela com o código IBGE de cada município brasileiro, além de outras informações geográficas regionais bem como geolocalização (latitude e longitude) de grande parte das cidades brasileiras
 
