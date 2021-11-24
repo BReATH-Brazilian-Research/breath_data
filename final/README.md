@@ -108,17 +108,7 @@ Uma das dificuldades encontradas estava relacionada ao grande volume de dados no
 > Relatar o processo para se alcançar os resultados é tão importante quanto os resultados.
 
 ## Perguntas de Pesquisa/Análise Combinadas e Respectivas Análises
-
-> Apresente os resultados da forma mais rica possível, com gráficos e tabelas. Mesmo que o seu código rode online em um notebook, copie para esta parte a figura estática. A referência a código e links para execução online pode ser feita aqui ou na seção de detalhamento do projeto (o que for mais pertinente).
-
-> Liste aqui as perguntas de pesquisa/análise e respectivas análises. Nem todas as perguntas precisam de queries que as implementam. É possível haver perguntas em que a solução é apenas descrita para demonstrar o potencial da base. Abaixo são ilustradas três perguntas, mas pode ser um número maior a critério da equipe.
->
 ### Perguntas/Análise com Resposta Implementada
-
-> As respostas às perguntas podem devem ser ilustradas da forma mais rica possível com tabelas resultantes, grafos ou gráficos que apresentam os resultados. Os resultados podem ser analisados e comentados. Veja um exemplo de figura ilustrando uma comunidade detectada no Cytoscape:
-
-> ![Comunidade no Cytoscape](images/cytoscape-comunidade.png)
-
 #### Pergunta/Análise 1
 
 **Existe alguma sazonalidade nos sintomas relacionados a problemas respiratórios?**
@@ -164,7 +154,7 @@ MIALGIA: 52384
 SATURACAO: 110485
 DESC_RESP: 159059
 
-Podemos concluir portanto que o sintoma mais comum é a tosse.
+Podemos concluir, portanto, que o sintoma mais comum é a tosse.
 
 #### Pergunta/Análise 3
 > * Pergunta 3
@@ -175,18 +165,16 @@ Podemos concluir portanto que o sintoma mais comum é a tosse.
 ### Perguntas/Análise Propostas mas Não Implementadas
 
 #### Pergunta/Análise 1
-> * Pergunta 1
->   
->   * Explicação em linhas gerais de como a base pode ser usada para responder esta pergunta e a sua relevância.
+**Quais os fatores climáticos que mais impactam casos de síndromes respiratórias em curto prazo?**
+
+Através da análise de picos de casos comparado à anormalidades encontradas nos dados climáticos poderíamos encontrar quais fatores climáticos influenciam mais o crescimento de casos graves.
 
 #### Pergunta/Análise 2
-> * Pergunta 2
->   
->   * Explicação em linhas gerais de como a base pode ser usada para responder esta pergunta e a sua relevância.
+**Existem condições específicas que alteram o quadro de SRAG de forma perceptível?**
+
+Realizando uma análise de blocos onde houveram variações climáticas, porém diferentes entre si, poderia se concluir se elas impactam, ou não, o quadro de sintomas de um paciente com SRAG.
 
 #### Pergunta/Análise 3
-> * Pergunta 3
->   
->   * Explicação em linhas gerais de como a base pode ser usada para responder esta pergunta e a sua relevância.
+**Fenômenos geográficos internacionais impactam o quadro de SRAG?**
 
-> Coloque um link para o arquivo do notebook que executa o conjunto de queries. Ele estará dentro da pasta `notebook`. Se por alguma razão o código não for executável no Jupyter, coloque na pasta `src`. Se as queries forem executadas atraves de uma interface de um SGBD não executável no Jupyter, como o Cypher, apresente na forma de markdown.
+Analisando períodos conhecidos, como os de occorência de fenômenos como o *El niño* ou o *La niña*, podemos verificar se estes causam um impacto em número incidências ou quadro geral de pacientes de SRAG. 
