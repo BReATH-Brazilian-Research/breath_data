@@ -148,17 +148,14 @@ Com isso, conseguimos confirmar a informação conhecida, problemas respiratóri
 Para responder essa pergunta, realizamos a seguinte query:
 
 ```sql
-SELECT COUNT(<nome_do_sintoma>) FROM SRAG WHERE <nome_do_sintoma> = 1
+SELECT COUNT(FEBRE) FROM SRAG WHERE FEBRE = 1
+SELECT COUNT(TOSSE) FROM SRAG WHERE TOSSE = 1
+SELECT COUNT(GARGANTA) FROM SRAG WHERE GARGANTA = 1
+SELECT COUNT(DISPNEIA) FROM SRAG WHERE DISPNEIA = 1
+SELECT COUNT(MIALGIA) FROM SRAG WHERE MIALGIA = 1
+SELECT COUNT(SATURACAO) FROM SRAG WHERE SATURACAO = 1
+SELECT COUNT(DESC_RESP) FROM SRAG WHERE DESC_RESP = 1
 ```
-Alterando *nome_do_sintoma*, que é um dos possíveis sintomas na base:
-
-- FEBRE
-- TOSSE
-- GARGANTA
-- DISPNEIA
-- MIALGIA
-- SATURACAO
-- DESC_RESP
 
 
 #### Pergunta/Análise 3
