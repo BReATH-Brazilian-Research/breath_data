@@ -157,10 +157,17 @@ DESC_RESP: 159059
 Podemos concluir, portanto, que o sintoma mais comum é a tosse.
 
 #### Pergunta/Análise 3
-> * Pergunta 3
->   
->   * Explicação sucinta da análise que será feita e conjunto de queries que
->     responde à pergunta.
+**Quais eram os dados climáticos no dia onde houveram mais casos de SRAG?**
+
+Podemos utilizar 3 selects aninhados para conseguir nossa informação, um para contar quantos casos aconteceram por dia, um para selecionar o valor máximo, e um final que encontra está mesma data do banco SRAG e encontra ela no banco clima.
+
+Adicionalmente pode-se querer especificar uma cidade nesta query, já que, da forma que está construída, esta imprimiria todos os dados de cada cidade para este dia.
+
+```sql
+SELECT * FROM clima WHERE date IN (
+	SELECT dt_notific, MAX(cnt) FROM (
+		SELECT dt_notific, COUNT(*) as 'cnt' FROM SRAG WHERE febre = 1 GROUP BY dt_notific));
+```
 
 ### Perguntas/Análise Propostas mas Não Implementadas
 
