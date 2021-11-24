@@ -39,15 +39,16 @@ def gencsv():
 
 def add_data_relational(db, df = None, csv = None):
 	print('adicionando os dados ao banco SRAG')
-	i = 0
+
 	if df is None and csv is not None:
 		df = pd.read_csv(csv)
 
 	if len(df.columns) >= 109:
-		df.drop(df.columns[0], axis=1, inplace=True)
-	
+		df.drop([df.columns[0], df.columns[1]], axis=1, inplace=True)
+	i = 0
 	for data in df.values:
-		i+=1
+		i += 1
+		print(i)
 		query = """
 		INSERT INTO SRAG
 		(DT_NOTIFIC, ID_MUNICIP ,SEM_NOT ,SG_UF_NOT ,DT_SIN_PRI ,DT_NASC ,NU_IDADE_N ,CS_SEXO ,CS_GESTANT ,
@@ -64,17 +65,15 @@ def add_data_relational(db, df = None, csv = None):
 		TIPO_PCR ,ANTIVIRAL ,SUPORT_VEN ,RES_VSR ,RES_FLUASU ,DT_UT_DOSE)
 		VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
 		?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,
-		?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
+		?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"""
 
 		result = db.query(query, data)
-		print(i)
 	db.commit()
 
 def add_data_relational_cities(db, city = None, geo = None):
 	print('adicionando os dados ao banco Cidades')
 	city = pd.read_csv(city)
 	geo = pd.read_csv(geo)
-	i = 0
 
 	geo = geo.rename(columns={"ID_MUNICIP":"Nome_Município"})
 
@@ -89,9 +88,10 @@ def add_data_relational_cities(db, city = None, geo = None):
 	
 	if len(df.columns) >= 12:
 		df.drop(df.columns[0], axis=1, inplace=True)
-
+	i = 0
 	for data in df.values:
-		i+=1
+		i += 1
+		print(i)
 		query = """
 		INSERT INTO Cidades
 		(UF,Nome_UF,Mesorregiao_geografica,Nome_mesorregiao,Microrregiao_geografica,
@@ -99,7 +99,6 @@ def add_data_relational_cities(db, city = None, geo = None):
 		VALUES(?,?,?,?,?,?,?,?,?,?,?);"""
 
 		result = db.query(query, data)
-		print(i)
 	db.commit()
 
 db = RelationalQuerier()
@@ -132,7 +131,7 @@ def main():
 
 	# Resets index column and removes redundant columns
 	srag_full.reset_index(inplace = True)
-	srag_full.drop(srag_full.columns[[0, 1]], axis = 1, inplace = True)
+	#srag_full.drop(srag_full.columns[[0, 1]], axis = 1, inplace = True)
 	srag_full.drop(['NU_ANO', 'SRAG2014FINAL', 'SRAG2015FINAL', 'SRAG2012FINAL', 'SRAG2017FINAL', 'SRAG2018FINAL'], axis = 1, inplace = True)
 	srag_full.to_csv("srag_full_cities.csv")
 

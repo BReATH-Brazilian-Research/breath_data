@@ -83,9 +83,10 @@ def add_data_relational(db, df = None, csv = None):
 		
 	if len(df.columns) >= 17:
 		df.drop(df.columns[0], axis=1, inplace=True)
-
+	i = 0
 	for data in df.values:
-		print(data)
+		i += 1
+		print(i)
 		query = """
 		INSERT INTO Clima
 		(date,precipitacao,pressao_at_max, pressao_at_min, radiacao,
@@ -100,7 +101,11 @@ def add_data_relational_stations(db, df = None, csv = None):
 
 	if df is None and csv is not None:
 		df = pd.read_csv(csv)
+	
+	i = 0
 	for data in df.values:
+		i+=1
+		print(i)
 		query = """
 		INSERT INTO Estacoes
 		(Estacao,Regiao,UF,Codigo,Prim_data,alt,lon,lat)

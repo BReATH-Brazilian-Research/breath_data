@@ -213,15 +213,15 @@ class RelationalQuerier:
         """
 		result = None
 		try:
-			if values is not None:
-				values = tuple(values)
-				self.c.execute(query, values)
-			else:
-				result = self.c.execute(query)
-				result = result.fetchall()
+			values = tuple(values)
+			#if values is not None:
+			self.c.execute(query, values)
+			#else:
+			#	result = self.c.execute(query)
+			#	result = result.fetchall()
 			sucess = True
-			self.conn.commit()
 			return True, result
+
 		except Exception as e:
 			print(e)
 			return False, result
