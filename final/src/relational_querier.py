@@ -74,6 +74,7 @@ class RelationalQuerier:
 			CREATE TABLE IF NOT EXISTS Clima(
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			date DATE,
+			station TEXT,
 			precipitacao REAL,
 			pressao_at_max REAL,
 			pressao_at_min REAL,
@@ -85,7 +86,6 @@ class RelationalQuerier:
 			velocidade_vent REAL,
 			region TEXT,
 			state TEXT,
-			station TEXT,
 			lat REAL,
 			lon REAL,
 			elvt REAL)
@@ -213,12 +213,13 @@ class RelationalQuerier:
         """
 		result = None
 		try:
-			values = tuple(values)
-			#if values is not None:
-			self.c.execute(query, values)
-			#else:
-			#	result = self.c.execute(query)
-			#	result = result.fetchall()
+
+			if values is not None:
+				values = tuple(values)
+				self.c.execute(query, values)
+			else:
+				result = self.c.execute(query)
+				result = result.fetchall()
 			sucess = True
 			return True, result
 
