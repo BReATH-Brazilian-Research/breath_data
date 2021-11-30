@@ -75,16 +75,14 @@ class BDAcessPoint(Service):
 		if 'gender' in request.request_info:
 			gender = request.request_info["gender"]
 
-		sql_query = "INSERT INTO Users(Nome) VALUES('{0}',{1},'{2}')".format(name, age, gender)
+		sql_query = "INSERT INTO Users(Nome, Idade, Genero) VALUES('{0}',{1},'{2}')".format(name, age, gender)
 
-		sucess, users = self.relational_querier.query(sql_query)
+		sucess, _ = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return request.create_response(sucess=False, response_data={"message":"Cannot create user"})
-		
-		user_id = users[0]["id"]
 
-		return request.create_response(sucess=True, response_data={"user_id":user_id})
+		return request.create_response(sucess=True)
 
 	def _register_symptom(self, request: Request) -> Response:
 		
@@ -139,7 +137,7 @@ class BDAcessPoint(Service):
 
 		symptom_id = symptom[0]["id"]
 
-		sql_query3 = "INSERT_INTO PacienteSintoma(Paciente, Sintoma) VALUES('{0}', '{1}')".format(patient_id, symptom_id)
+		sql_query3 = "INSERT INTO PacienteSintoma(Paciente, Sintoma) VALUES('{0}', '{1}')".format(patient_id, symptom_id)
 		sucess, _ = self.relational_querier.query(sql_query3)
 
 		if not sucess:
@@ -200,7 +198,7 @@ class BDAcessPoint(Service):
 		nome = request.request_info["nome"]
 		cod = request.request_info["cod"]
 
-		sql_query = "INSERT_INTO Cidades(Id, Nome, UF) VALUES('{0}', '{1}', '{2}')".format(cod, nome, uf)
+		sql_query = "INSERT INTO Cidades(Id, Nome, UF) VALUES('{0}', '{1}', '{2}')".format(cod, nome, uf)
 
 		sucess, _ = self.relational_querier.query(sql_query)
 
@@ -213,7 +211,7 @@ class BDAcessPoint(Service):
 	def _register_patient(self, request:Request) -> Response:
 		sex = request.request_info["sex"]
 
-		sql_query = "INSERT_INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
+		sql_query = "INSERT INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
 
 		sucess, patient = self.relational_querier.query(sql_query)
 
@@ -225,7 +223,7 @@ class BDAcessPoint(Service):
 	def _register_workflow(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
 
-		sql_query = "INSERT_INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
+		sql_query = "INSERT INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
 
 		sucess, _ = self.relational_querier.query(sql_query)
 
