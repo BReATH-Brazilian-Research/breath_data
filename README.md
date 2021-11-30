@@ -7,6 +7,8 @@ A seguir é apresentada a estrutura de pastas do repositório do projeto:
 ~~~
 ├── README.md  <- apresentação do projeto
 │
+├── previa     <- entrega prévia
+|
 ├── parcial    <- entrega parcial
 │
 └── final      <- entrega final
@@ -22,5 +24,6 @@ A seguir é apresentada a estrutura de pastas do repositório do projeto:
 
 # Etapas
 
+* [Entrega Prévia](previa/)
 * [Entrega Parcial](parcial/)
 * [Entrega Final](final/)

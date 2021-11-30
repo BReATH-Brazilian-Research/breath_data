@@ -1,4 +1,4 @@
-# Modelo de Apresentação da Entrega Prévia
+# Entrega Prévia
 
 # Estrutura de Arquivos e Pastas
 
@@ -43,7 +43,7 @@ Projeto na linguagem escolhida, incluindo todos os arquivos de dados e bibliotec
 
 Qualquer mídia usada no seu projeto: vídeo, imagens, animações, slides etc. Coloque os arquivos aqui (mesmo que você mantenha uma cópia no diretório do código).
 
-# Modelo para Apresentação da Entrega Prévia do Projeto
+# Apresentação da Entrega Prévia do Projeto
 
 # Projeto `Breath - DataBank`
 
@@ -65,7 +65,7 @@ Qualquer mídia usada no seu projeto: vídeo, imagens, animações, slides etc. 
 
 
 ## Slides da Apresentação
-> [slides](slides/slides_previa.pdf)
+> [Slides](slides/slides_previa.pdf)
 
 ## Modelo Conceitual Preliminar
 

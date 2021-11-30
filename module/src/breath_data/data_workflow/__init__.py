@@ -1,1 +1,2 @@
-from .service import DataWorflow
+from .service import DataWorkflow
+from .workflow import Workflow

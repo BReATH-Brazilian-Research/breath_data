@@ -1,4 +1,6 @@
-from typing import Dict, List, Union
+from __future__ import annotations
+
+from typing import Callable, Dict, List, Union
 from breath_api_interface.proxy import ServiceProxy
 from breath_api_interface.queue import Queue
 from breath_api_interface.service_interface import Service
@@ -8,186 +10,304 @@ from breath_data.bd_acess_point.relational_querier import RelationalQuerier
 from breath_data.bd_acess_point.graph_querier import GraphQuerier
 
 class BDAcessPoint(Service):
-    '''BReATH service for provide BD acess
+	'''BReATH service for provide BD acess
 
-        :ivar relational_querier: Handles relational (SQL) queries
-        :type relational_querier: breath_data.bd_acess_point.relational_querier.RelationalQuerier
+		:ivar relational_querier: Handles relational (SQL) queries
+		:type relational_querier: breath_data.bd_acess_point.relational_querier.RelationalQuerier
 
-        :ivar graph_querier: Handles graph (Neo4j) queries
-        :type graph_querier: breath_data.bd_acess_point.graph_querier.GraphQuerier
-    '''
+		:ivar graph_querier: Handles graph (Neo4j) queries
+		:type graph_querier: breath_data.bd_acess_point.graph_querier.GraphQuerier
+	'''
+	
+	def __init__(self, proxy:ServiceProxy, request_queue:Queue, global_response_queue:Queue):
+		'''BDAcessPoint constructor.
 
-    def __init__(self, proxy:ServiceProxy, request_queue:Queue, global_response_queue:Queue):
-        '''BDAcessPoint constructor.
+			Initializes the service with the BDs.
+		'''
+		super().__init__(proxy, request_queue, global_response_queue, "BDAcessPoint")
+		self.relational_querier = RelationalQuerier()
+		self.graph_querier = GraphQuerier()
 
-            Initializes the service with the BDs.
-        '''
-        super().__init__(proxy, request_queue, global_response_queue, "BDAcessPoint")
-        self.relational_querier = RelationalQuerier()
-        self.graph_querier = GraphQuerier()
-        
-    def run(self) -> None:
-        '''Run the service, handling BD requests.
-        '''
-        request = self._get_request()
+		self._operations : Dict[str, Callable[[BDAcessPoint, Request], Response]] = {
+							"register_symptom" : self._register_symptom,
+							"register_workflow": self._register_workflow,
+							"is_workflow_runned": self._is_workflow_runned,
+							"register_user": self._register_user,
+							"get_symptoms_types" : self._get_symptoms_types,
+							"register_symptom_type": self._register_symptom_type,
+							"register_city": self._register_city,
+							"register_patient" : self._register_patient
+							}
+		
+	def run(self) -> None:
+		'''Run the service, handling BD requests.
+		'''
+		request = self._get_request()
 
-        if request is None:
-            return
+		if request is None:
+			return
+			
+		response : Response = request.create_response(sucess=False, response_data={"message": "Operation not available"})
 
-        response : Response = request.create_response(sucess=False, response_data={"message": "Operation not available"})
+		if request.operation_name in self._operations:
+			response = self._operations[request.operation_name](request)
 
-        if request.operation_name == "register_symptom":
-            response = self._register_symptom(request)
-        elif request.operation_name == "register_user":
-            response = self._register_user(request)
-        elif request.operation_name == "get_symptoms_types":
-            response = self._get_symptoms_types(request)
-        elif request.operation_name == "register_symptom_type":
-            response = self._register_symptom_type(request)
-        elif request.operation_name == "register_city":
-            response = self._register_city(request)
-        elif request.operation_name == "register_patient":
-            response = self._register_patient(request)
+		self._send_response(response)
 
-        self._send_response(response)
+	def _cancel_all(self):
+		self.relational_querier.cancel()
+		#self.graph_querier.cancel()
 
-        
-    def _cancel_all(self):
-        self.relational_querier.cancel()
-        self.graph_querier.cancel()
+	def _commit_all(self):
+		self.relational_querier.commit()
+		#self.graph_querier.commit()
 
-    def _commit_all(self):
-        self.relational_querier.commit()
-        self.graph_querier.commit()
+	def _register_user(self, request:Request) -> Response:
 
-    def _register_user(self, request:Request) -> Response:
-        nome = request.request_info["name"]
+		name = None
+		age = None
+		gender = None
 
-        sql_query = "INSERT INTO Usuarios(Nome) VALUES('{0}')".format(nome)
+		if 'name' in request.request_info:
+			name = request.request_info["name"]
+		if 'age' in request.request_info:
+			age = request.request_info["age"]
+		if 'gender' in request.request_info:
+			gender = request.request_info["gender"]
 
-        sucess, users = self.relational_querier.query(sql_query)
+		sql_query = "INSERT INTO Users(Nome) VALUES('{0}',{1},'{2}')".format(name, age, gender)
 
-        if not sucess:
-            return request.create_response(sucess=False, response_data={"message":"Cannot create user"})
-        
-        user_id = users[0]["id"]
+		sucess, users = self.relational_querier.query(sql_query)
 
-        return request.create_response(sucess=True, response_data={"user_id":user_id})
+		if not sucess:
+			return request.create_response(sucess=False, response_data={"message":"Cannot create user"})
+		
+		user_id = users[0]["id"]
 
-    def _register_symptom(self, request: Request) -> Response:
-        
-        symptom_name = request.request_info["symptom_name"]
-        
-        year = request.request_info["year"]
-        month = request.request_info["month"]
-        day = request.request_info["day"]
+		return request.create_response(sucess=True, response_data={"user_id":user_id})
 
-        symptoms_types = self._search_symptom_type(symptom_name)
+	def _register_symptom(self, request: Request) -> Response:
+		
+		symptom_name = None
+		year = None
+		month = None
+		day = None
 
-        if symptoms_types is None:
-            self._cancel_all()
-            return request.create_response(sucess=False, response_data={"message": "Symptom type not found"})
+		if 'symptom_name' in request.request_info:
+			symptom_name = request.request_info["symptom_name"]
+		
+		if 'year' in request.request_info:
+			year = request.request_info["year"]
+		if 'month' in request.request_info:
+			month = request.request_info["month"]
+		if 'day' in request.request_info:
+			day = request.request_info["day"]
 
-        symptom_type_id = symptoms_types[0]["id"]
+		symptoms_types = self._search_symptom_type(symptom_name)
 
-        patient_id = 0
+		if symptoms_types is None:
+			self._cancel_all()
+			return request.create_response(sucess=False, response_data={"message": "Symptom type not found"})
 
-        if "patient_id" in request.request_info:
-            patient_id = request.request_info["patient_id"]
-        else:
-            user_id = request.request_info["user_id"]
-            users = self._search_user(user_id)
+		symptom_type_id = symptoms_types[0]["id"]
 
-            if users is None:
-                self._cancel_all()
-                return request.create_response(sucess=False, response_data={"message": "User not found"})
+		patient_id = 0
 
-            patient_id = users[0]["Paciente"]
-            city_id = users[0]["Cidade"]
+		if "patient_id" in request.request_info:
+			patient_id = request.request_info["patient_id"]
+		else:
+			user_id = request.request_info["user_id"]
+			users = self._search_user(user_id)
 
-        city_id = request.request_info["city"]
+			if users is None:
+				self._cancel_all()
+				return request.create_response(sucess=False, response_data={"message": "User not found"})
 
-        sql_query = "INSERT INTO Sintoma(Tipo, Ano, Mês, Dia, Cidade)"
-        sql_query += " VALUES('{0}', '{1}', '{2}', '{3}', {4})".format(symptom_type_id, year, month, day, city_id)
+			patient_id = users[0]["Paciente"]
+			city_id = users[0]["Cidade"]
 
-        sucess, symptom = self.relational_query.query(sql_query)
+		city_id = request.request_info["city"]
 
-        if not sucess:
-            self._cancel_all()
-            return request.create_response(sucess=False, response_data={"message":"Error while registering symptom"})
+		sql_query = "INSERT INTO Sintomas(Tipo, Ano, Mês, Dia, Cidade)"
+		sql_query += " VALUES('{0}', '{1}', '{2}', '{3}', {4})".format(symptom_type_id, year, month, day, city_id)
 
-        symptom_id = symptom[0]["id"]
+		sucess, symptom = self.relational_query.query(sql_query)
 
-        sql_query3 = "INSERT_INTO PacienteSintoma(Paciente, Sintoma) VALUES('{0}', '{1}')".format(patient_id, symptom_id)
-        sucess, _ = self.relational_querier.query(sql_query3)
+		if not sucess:
+			self._cancel_all()
+			return request.create_response(sucess=False, response_data={"message":"Error while registering symptom"})
 
-        if not sucess:
-            self._cancel_all()
-            return request.create_response(sucess=False, response_data={"message":"Cannot register patient symptom relation"})
+		symptom_id = symptom[0]["id"]
 
-        self._commit_all()
+		sql_query3 = "INSERT_INTO PacienteSintoma(Paciente, Sintoma) VALUES('{0}', '{1}')".format(patient_id, symptom_id)
+		sucess, _ = self.relational_querier.query(sql_query3)
 
-        return request.create_response(sucess=True)
+		if not sucess:
+			self._cancel_all()
+			return request.create_response(sucess=False, response_data={"message":"Cannot register patient symptom relation"})
 
-    def _search_symptom_type(self, symptom_name:str) -> Union[List[Dict[str, str]], None]:
-        neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(symptom_name)        
-        sucess, symptoms_types = self.graph_querier.query(neo_query)
+		self._commit_all()
 
-        if not sucess:
-            return None
+		return request.create_response(sucess=True)
 
-        return symptoms_types
+	def _search_symptom_type(self, symptom_name:str) -> Union[List[Dict[str, str]], None]:
+		#neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(symptom_name)        
+		#sucess, symptoms_types = self.graph_querier.query(neo_query)
 
-    def _search_user(self, user_id:int) -> Union[List[Dict[str, str]], None]:
-        sql_query = "SELECT * FROM Usuarios WHERE Usuarios.id = {0}".format(user_id)
-        sucess, users = self.relational_querier.query(sql_query)
+		sql_query = "SELECT * from Sintomas WHERE Tipo = {0};".format(symptom_name)
+		sucess, symptoms_types = self.relational_querier.query(sql_query)
 
-        if not sucess:
-            return None
-        
-        return users
+		if not sucess:
+			return None
 
-    def _get_symptoms_types(self, request:Request) -> Response:
-        neo_query = "MATCH (t:Tipo_Sintoma RETURN t"
-        sucess, symptoms_types = self.graph_querier.query(neo_query)
+		return symptoms_types
 
-        if not sucess:
-            return Response(False, {"message":"Unable to access symptoms types"})
-        
-        return Response(True, {"symptoms_types":symptoms_types})
+	def _search_user(self, user_id:int) -> Union[List[Dict[str, str]], None]:
+		sql_query = "SELECT * FROM Users WHERE Users.id = {0}".format(user_id)
+		sucess, users = self.relational_querier.query(sql_query)
 
-    def _register_symptom_type(self, request:Request) -> Response:
-        neo_query = "CREATE ({0}:Tipo_Sintoma)".format(request.request_info["symptom_name"])
+		if not sucess:
+			return None
+		
+		return users
 
-        sucess, _ = self.graph_querier.query(neo_query)
+	def _get_symptoms_types(self, request:Request) -> Response:
+		#neo_query = "MATCH (t:Tipo_Sintoma RETURN t"
+		#sucess, symptoms_types = self.graph_querier.query(neo_query)
 
-        if not sucess:
-            return request.create_response(False, {"message":"Unable to register symptom type"}) 
+		sql_query = "SELECT Tipo from Sintomas GROUP BY Tipo;"
+		sucess, _ = self.relational_querier.query(sql_query)
 
-        return request.create_response(True)
+		if not sucess:
+			return Response(False, {"message":"Unable to access symptoms types"})
+		
+		return Response(True, {"symptoms_types":symptoms_types})
 
-    def _register_city(self, request:Request) -> Response:
-        uf = request.request_info["uf"]
-        nome = request.request_info["nome"]
-        cod = request.request_info["cod"]
+	# onde guardariamos tipo de sintoma no relacional?
+	def _register_symptom_type(self, request:Request) -> Response:
+		neo_query = "CREATE ({0}:Tipo_Sintoma)".format(request.request_info["symptom_name"])
+		sucess, _ = self.graph_querier.query(neo_query)
+		
 
-        sql_query = "INSERT_INTO Cidades(UF, Nome, Código) VALUES('{0}', '{1}', '{2}')".format(uf, nome, cod)
 
-        sucess, _ = self.relational_querier.query(sql_query)
+		if not sucess:
+			return request.create_response(False, {"message":"Unable to register symptom type"}) 
 
-        if not sucess:
-            return request.create_response(False, {"message":"Unable to register city"})
-        
-        return request.create_response(True)
+		return request.create_response(True)
 
-    def _register_patient(self, request:Request) -> Response:
-        sex = request.request_info["sex"]
+	def _register_city(self, request:Request) -> Response:
+		uf = request.request_info["uf"]
+		nome = request.request_info["nome"]
+		cod = request.request_info["cod"]
 
-        sql_query = "INSERT_INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
+		sql_query = "INSERT_INTO Cidades(Id, Nome, UF) VALUES('{0}', '{1}', '{2}')".format(cod, nome, uf)
 
-        sucess, patient = self.relational_querier.query(sql_query)
+		sucess, _ = self.relational_querier.query(sql_query)
 
-        if not sucess:
-            return request.create_response(False, {"message":"Unable to register patient"})
-        
-        return request.create_response(True, {"patient": patient[0]})
+		if not sucess:
+			return request.create_response(False, {"message":"Unable to register city"})
+		
+		return request.create_response(True)
+
+	# Teremos banco pacientes alem do banco de usurios?
+	def _register_patient(self, request:Request) -> Response:
+		sex = request.request_info["sex"]
+
+		sql_query = "INSERT_INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
+
+		sucess, patient = self.relational_querier.query(sql_query)
+
+		if not sucess:
+			return request.create_response(False, {"message":"Unable to register patient"})
+		
+		return request.create_response(True, {"patient": patient[0]})
+
+	def _register_workflow(self, request:Request) -> Response:
+		name = request.request_info["workflow_name"]
+
+		sql_query = "INSERT_INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
+
+		sucess, _ = self.relational_querier.query(sql_query)
+
+		if not sucess:
+			return request.create_response(False, {"message":"Unable to register workflow"})
+		
+		return request.create_response(True)
+
+	def _is_workflow_runned(self, request:Request) -> Response:
+		name = request.request_info["workflow_name"]
+
+		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = {0}".format(name)
+		sucess, workflows = self.relational_querier.query(sql_query)
+
+		if len(workflows) > 0 and workflows[0].Executado != 0:
+			return request.create_response(True)
+
+		return request.create_response(False)
+
+	def _get_climate_interval(self, request:Request) -> Response:
+
+		initial = None
+		final = None
+
+		if 'initial' in request.request_info:
+			initial = request.request_info["initial"]
+		if 'final' in request.request_info:
+			final = request.request_info["final"]
+
+		sql_query = "SELECT * from Climate WHERE date BETWEEN {0} AND {1} ORDER BY date;".format(initial, final)
+		sucess, climates = self.relational_querier.query(sql_query)
+
+		if not sucess:
+			return None
+
+		return climates
+		
+	def _get_climate_date(self, request:Request) -> Response:
+		
+		date = None
+
+		if 'date' in request.request_info:
+			date = request.request_info["date"]
+
+
+		sql_query = "SELECT * from Climate WHERE date = {0} ORDER BY date;".format(date)
+		sucess, climates = self.relational_querier.query(sql_query)
+
+		if not sucess:
+			return None
+
+		return climates
+
+	def _get_SRAG_interval(self, request:Request) -> Response:
+		
+		initial = None
+		final = None
+
+		if 'initial' in request.request_info:
+			initial = request.request_info["initial"]
+		if 'final' in request.request_info:
+			final = request.request_info["final"]
+
+		sql_query = "SELECT * from SRAG WHERE date BETWEEN {0} AND {1} ORDER BY date;".format(initial, final)
+		sucess, diagnostics = self.relational_querier.query(sql_query)
+
+		if not sucess:
+			return None
+
+		return diagnostics
+
+	def _get_SRAG_date(self, request:Request) -> Response:
+		
+		date = None
+
+		if 'date' in request.request_info:
+			date = request.request_info["date"]
+
+		sql_query = "SELECT * from SRAG WHERE date = {0} ORDER BY date;".format(date)
+		sucess, diagnostics = self.relational_querier.query(sql_query)
+
+		if not sucess:
+			return None
+
+		return diagnostics
