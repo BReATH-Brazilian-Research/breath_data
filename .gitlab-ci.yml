@@ -10,6 +10,7 @@ build_main:
     - cd module
     - python3 -m pip install --upgrade build
     - python3 -m build
+    - python3 -m pip install .
    
   artifacts: # documentos e arquivos que serao gerados
     paths:
