@@ -235,10 +235,10 @@ class BDAcessPoint(Service):
 	def _is_workflow_runned(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
 
-		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = {0}".format(name)
+		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = '{0}'".format(name)
 		sucess, workflows = self.relational_querier.query(sql_query)
 
-		if len(workflows) > 0 and workflows[0].Executado != 0:
+		if len(workflows) > 0 and workflows[0][1] != 0:
 			return request.create_response(True)
 
 		return request.create_response(False)
