@@ -13,21 +13,15 @@ class GraphQuerier:
 
 	def __init__(self):
 		self.driver = GraphDatabase.driver(
-			"bolt://localhost:7687", auth=("neo4j","password")),
-			# max_connection_lifetime=30 * 60,
-			# max_connection_pool_size=50,
-			# connection_acquisition_timeout=2 * 60,
-			# connection_timeout=15,
-			# encrypted=True,
-			# trust=TRUST_ALL_CERTIFICATES)
+			"bolt://localhost:7687", auth=("neo4j","password"))
 
 	def _close(self):
 		# Don't forget to close the driver connection when you are finished with it
 		self.driver.close()
 
 	def query(self, query = None):
-		# To learn more about the Cypher syntax, see https://neo4j.com/docs/cypher-manual/current/
-		# The Reference Card is also a good resource for keywords https://neo4j.com/docs/cypher-refcard/current/
+		# Cypher syntax https://neo4j.com/docs/cypher-manual/current/
+		# The Reference https://neo4j.com/docs/cypher-refcard/current/
 
 		result = self.driver.session().run(query)
 		try:

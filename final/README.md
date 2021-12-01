@@ -43,13 +43,14 @@ Cidades(_Id_, UF, Nome_UF, Mesorregião Geográfica, Nome_Mesorregião, Microrre
 título do arquivo/base | link | breve descrição
 ----- | ----- | -----
 srag_full_cities.csv | [srag_full_cities.csv](https://drive.google.com/file/d/1afwwfCsLYzNcMdGei3BBKOeBc3WGnto-/view?usp=sharing) | Compilação de dados tratados de casos de doenças em postos de saúde SUS ao redor do país de 2013 à 2018, incluindo nome de cidades
-south_clean.csv | [south_clean.csv](https://drive.google.com/file/d/1-YdoWALSqoHi0WyLKiZDjHvnPWR3_mG4/view?usp=sharing) | Valores por dia de dados do clima da região sul do país
-southeast_clean.csv | [southeast_clean.csv](https://drive.google.com/file/d/1Omvc9rIAaBSBLg25icULs1HkRQmnwvd4/view?usp=sharing) | Valores por dia de dados do clima da região sudeste do país
-north_clean.csv.csv | [north_clean.csv](https://drive.google.com/file/d/1mifvSBGct_9FvBBPdS6-cJFq9hZLRtm2/view?usp=sharing) | Valores por dia de dados do clima da região norte do país
-northeast_clean.csv.csv | [northeast_clean.csv](https://drive.google.com/file/d/1Fge_Z-B-NDOFCWotXum6mralI4U5bD-W/view?usp=sharing) | Valores por dia de dados do clima da região nordeste do país
-central_west_clean.csv | [central_west_clean.csv](https://drive.google.com/file/d/1WWc6DRXzgnIOlyvg7dqzKym1-7Gc3r8Y/view?usp=sharing) | Valores por dia de dados do clima da região centro-oeste do país
-clima_estacoes_meteo.csv | [stations.csv](https://drive.google.com/file/d/129yttuUHzRjfvi9QCkPz_da2dwJ3HMQB/view?usp=sharing) | Tabela com todas as estações meteorológicas utilizadas
-cidades_brasileiras_editado.csv | [cidades_geo_processado.csv](https://drive.google.com/file/d/1wFUTVmRqbqK55ULQL_fwXRssCbfTC0RI/view?usp=sharing) | Tabela com o código IBGE de cada município brasileiro, além de outras informações geográficas regionais bem como geolocalização (latitude e longitude) de grande parte das cidades brasileiras
+clima_sul_processado.csv | [clima_sul_processado.csv](https://drive.google.com/file/d/16cOnwBS8JqDIwOxH_pdcTyQG7L-DSlmf/view?usp=sharing) | Valores por hora de dados do clima da região sul do país
+clima_sudeste_processado.csv | [clima_sudeste_processado.csv](https://drive.google.com/file/d/1PofSxREt7spX005JxK5QL59m36fSDtp2/view?usp=sharing) | Valores por hora de dados do clima da região sudeste do país
+clima_norte_processado.csv | [clima_norte_processado.csv](https://drive.google.com/file/d/1sgAY6_U1FLTKwv_GDmus6dyGnlzI-m0g/view?usp=sharing) | Valores por hora de dados do clima da região norte do país
+clima_nordeste_processado.csv | [clima_nordeste_processado.csv](https://drive.google.com/file/d/1QB3_MoBUZvv9boxWelNyqoNV-uVvupN9/view?usp=sharing) | Valores por hora de dados do clima da região nordeste do país
+clima_centro_oeste_processado.csv | [clima_centro_oeste_processado.csv](https://drive.google.com/file/d/17UMWjVsAyCvOVwGsRVw715647DTJbJNL/view?usp=sharing) | Valores por hora de dados do clima da região centro-oeste do país
+clima_estacoes_meteo.csv | [clima_estacoes_meteo.csv](https://drive.google.com/file/d/1evGeD76T7Wh0AhlWI34NtRSNHVJWzjYg/view?usp=sharing) | Tabela com todas as estações meteorológicas utilizadas
+cidades_brasileiras_editado.csv | [cidades_brasileiras_editado.csv](https://drive.google.com/file/d/1CmzWRbQCrVKaN7g0FZd700IVHFEL2VLS/view?usp=sharing) | Tabela com a geolocalização (latitude e longitude) de grande parte das cidades brasileiras
+IBGE_Municipios.csv | [IBGE_Municipios.csv](https://drive.google.com/file/d/1ldijywxW7ZrC3Z-iYX8URVYC7C--h_Mz/view?usp=sharing) | Tabela com o código IBGE de cada município brasileiro, além de outras informações geográficas regionais
 
 ## Bases de Dados
 
@@ -61,6 +62,8 @@ Plataforma da Qualidade do Ar | [Qualidade do Ar](http://qualidadedoar.org.br/ab
 Brazilian_cities_database | [Brazilian Cities DB](https://github.com/hewerthomn/brazilian_cities_database/blob/master/cities.sql) | Base de dados aberta com a longitude e latitude da quase totalidade de cidades brasileiras
 
 ## Detalhamento do Projeto
+> Apresente aqui detalhes do processo de construção do dataset e análise. Nesta seção ou na seção de Perguntas podem aparecer destaques de código como indicado a seguir. Note que foi usada uma técnica de highlight de código, que envolve colocar o nome da linguagem na abertura de um trecho com `~~~`, tal como `~~~python`.
+> Os destaques de código devem ser trechos pequenos de poucas linhas, que estejam diretamente ligados a alguma explicação. Não utilize trechos extensos de código. Se algum código funcionar online (tal como um Jupyter Notebook), aqui pode haver links. No caso do Jupyter, preferencialmente para o Binder abrindo diretamente o notebook em questão.
 
 Otimização necessária em Python para a conversão do código do IBGE para nome da cidade
 ~~~python
@@ -143,8 +146,6 @@ SELECT COUNT(MIALGIA) FROM SRAG WHERE MIALGIA = "1.0";
 SELECT COUNT(SATURACAO) FROM SRAG WHERE SATURACAO = "1.0";
 SELECT COUNT(DESC_RESP) FROM SRAG WHERE DESC_RESP = "1.0";
 ```
-
-```
 FEBRE: 169461
 TOSSE: 183489
 GARGANTA: 38131
@@ -152,7 +153,6 @@ DISPNEIA: 164511
 MIALGIA: 52384
 SATURACAO: 110485
 DESC_RESP: 159059
-```
 
 Podemos concluir, portanto, que o sintoma mais comum é a tosse.
 
@@ -169,66 +169,6 @@ SELECT * FROM clima WHERE date IN (
 		SELECT DT_NOTIFIC, MAX(cnt) FROM (
 			SELECT DT_NOTIFIC, COUNT(*) as 'cnt' FROM SRAG WHERE FEBRE = "1.0" GROUP BY DT_NOTIFIC)));
 ```
-date |  precipitacao | pressao_at_max | pressao_at_min | radiacao | temp_max | temp_min | umidade | max_vent | velocidade_vent | region | state | station | lat | lon | elvt
------ | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | -----
-11/04/2016 | 24.8 | 1016.9 | 849.3 | 4148 | 36.8 | 12 | 100 | 18.9 | 8.2 | SE | MG | CAPELINHA | -17.70527777 | -42.38916666 | 948
-
-(Foi mostrado apenas uma cidade como ilustração do funcionamento da query pois o resultado completo seria muito grande)
-#### Pergunta/Análise 4
-**Existe alguma sazonalidade nos casos de SRAG?**
-
-Com essa pergunta, confirmamos que o aspecto sazonal se aplica aos casos de SRAG como todo, e não só aos relacionados com sintomas gripais.
-
-Confirmamos essa relação analisando a distribuição temporal do número de entradas por todo o período e a distribuição geográfica dos casos pelo Brasil em cada estação de 2016. Os resultados seguem.
-
-![](assets/pergunta4_1.png)
-![](assets/pergunta4_2.png)
-![](assets/pergunta4_3.png)
-![](assets/pergunta4_4.png)
-![](assets/pergunta4_5.png)
-
-
-
-#### Pergunta/Análise 5
-**Os casos se concentram em alguma região geográfica?**
-
-Utilizando visualização de dados e clusterização, conseguimos analisar a distribuição dos casos pelo país.
-
-![](assets/pergunta5_1.png)
-
-Assim, notamos que eles se concentram, principalmente, no Centro-Sul e próximo ao litoral.
-Contudo, notamos que essas análises não levaram a uma informação relevante, uma vez que elas apenas evidenciaram a distribuição da população pelo país.
-
-#### Pergunta/Análise 6
-**A idade influencia na Taxa de Mortalidade de SRAG?**
-
-Para cada idade, calculamos a respectiva taxa a partir da coluna de evolução da doença.
-
-![](assets/pergunta6_1.png)
-
-O resultado confirmou que faixas etárias mais idosas apresentam maior taxa de mortalidade.
-
-#### Pergunta/Análise 7
-**Quais são as principais causas de SRAG?**
-
-Contando o número de casos de cada classe, podemos determinar a resposta.
-Para exibir resultados mais relevantes, incluímos apenas os que foram especificados (não nulos).
-
-![](assets/pergunta7_1.png)
-
-O gráfico mostra que a maioria dos sintomas são causados por Influenza, seguida de outros vírus respiratórios.
-
-#### Pergunta/Análise 8
-**A vacinação contra influenza influencia na mortalidade?**
-
-Separamos os casos em dois grupos: os que ocorreram em pessoas vacinadas e em não vacinadas.
-Selecionando os casos causados por influenza, comparamos a taxa de mortalidade de cada um, e notamos que os não vacinados apresentam maior mortalidade.
-
-| Grupo Populacional  | Taxa de Mortalidade |
-| ------------- | ------------- |
-| Vacinados  | 0,11  |
-| Não Vacinados  | 0,16  |
-
 
 ### Perguntas/Análise Propostas mas Não Implementadas
 
