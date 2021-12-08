@@ -1,8 +1,24 @@
-image: python:latest # pega imagem de docker do python
+image: python:3.8 # pega imagem de docker do python
+
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - python -V  # Print out python version for debugging
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+
+
 
 stages:
   - build
-  - complete
 
 build_main:
   stage: build
@@ -10,13 +26,8 @@ build_main:
     - cd module
     - python3 -m pip install --upgrade build
     - python3 -m build
+    - python3 -m pip install .
    
   artifacts: # documentos e arquivos que serao gerados
     paths:
       - public
- 
-
-complete:
-  stage: complete
-  script:
-    - echo 'build do breath_data completo'
