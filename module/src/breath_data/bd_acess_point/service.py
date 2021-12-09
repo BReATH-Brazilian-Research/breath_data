@@ -121,13 +121,9 @@ class BDAcessPoint(Service):
 		if 'day' in request.request_info:
 			day = request.request_info["day"]
 
-		symptoms_types = self._search_symptom_type(symptom_name)
-
-		if symptoms_types is None:
+		if symptom_name is None:
 			self._cancel_all()
 			return request.create_response(sucess=False, response_data={"message": "Symptom type not found"})
-
-		symptom_type_id = symptoms_types[0]["id"]
 
 		patient_id = 0 # colocamos esse valor para substituir a req no BD (teste)
 
