@@ -3,11 +3,11 @@ from typing import Union
 from breath_api_interface import request
 
 from breath_api_interface.request import Response
-from breath_data.data_workflow import DataWorkflow
+from breath_api_interface.service_interface.service import Service
 
 class Workflow(ABC):
 
-    def __init__(self, workflow_service:DataWorkflow, workflow_name:str):
+    def __init__(self, workflow_service:Service, workflow_name:str):
         self.__service = workflow_service
         self._workflow_name = workflow_name
 

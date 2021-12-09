@@ -1,6 +1,7 @@
 from typing import Dict
+
+from breath_api_interface.service_interface.service import Service
 from .workflow import Workflow
-from breath_data import DataWorkflow
 import os
 
 pandas_ids = {
@@ -55,7 +56,7 @@ def save_response_content(response, destination):
                 f.write(chunk)
 
 class Downloader(Workflow):
-    def __init__(self, workflow_service: DataWorkflow, workflow_name: str, file_dict:Dict[str, str], directory:str):
+    def __init__(self, workflow_service: Service, workflow_name: str, file_dict:Dict[str, str], directory:str):
         super().__init__(workflow_service, workflow_name)
         self._file_dict = file_dict
         self._directory = directory
@@ -69,5 +70,5 @@ class Downloader(Workflow):
             download_file_from_google_drive(file_id, path)
 
 class BDDownloader(Workflow):
-    def __init__(self, workflow_service: DataWorkflow, directory="..\\bd_acess_point\\relational_querier"):
+    def __init__(self, workflow_service: Service, directory="..\\bd_acess_point\\relational_querier"):
         super().__init__(workflow_service, workflow_service, "BDDownloader", bd_ids, directory)
