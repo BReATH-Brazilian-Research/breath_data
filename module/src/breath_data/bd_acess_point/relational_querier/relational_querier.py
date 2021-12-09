@@ -249,7 +249,7 @@ class RelationalQuerier(metaclass=Singleton):
 			self.conn.commit()
 			return True, result, description
 		except Exception as e:
-			print(e)
+			print("LOG:", e)
 			return False, result, description
 
 	def cancel(self):
