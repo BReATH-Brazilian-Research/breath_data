@@ -10,9 +10,9 @@ import breath_data.data_workflow.open_sus as open_sus
 import breath_data.data_workflow.ibge as ibge
 
 
-from .data_download import BDDownloader
+from .data_download import BDDownloader, ModelDownloader
 
-workflows = {"BDDownloader": BDDownloader}
+workflows = {"BDDownloader": BDDownloader, "ModelDownloader": ModelDownloader}
 
 class DataWorkflow(Service):
     def __init__(self, proxy:ServiceProxy, request_queue:Queue, global_response_queue:Queue):
