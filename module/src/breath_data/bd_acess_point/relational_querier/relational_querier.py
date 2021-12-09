@@ -48,18 +48,18 @@ class RelationalQuerier(metaclass=Singleton):
 			Id INTEGER PRIMARY KEY,
 			Diagnóstico TEXT)
 			""")	
-    
+
 		# create table Sintomas
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS Sintomas(
 			Id INTEGER PRIMARY KEY,
 			Tipo TEXT,
-			Ano INTEGER,
-			Mês INTEGER,
-			Dia INTEGER,
+			Ano TEXT,
+			Mês TEXT,
+			Dia TEXT,
 			Cidade TEXT,
-			Paciente FOREIGN_KEY)
+			Paciente TEXT)
 			""")
 		
 		# create table Users
@@ -229,6 +229,7 @@ class RelationalQuerier(metaclass=Singleton):
 			)""")
 
 		self.conn.commit()
+		
 
 	def query(self, query:str, values:str = None) -> Tuple[bool, Union[List[Dict[str, str]], None]]:
 		if self.conn is None:
