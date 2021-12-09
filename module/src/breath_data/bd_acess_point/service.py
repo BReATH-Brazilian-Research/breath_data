@@ -231,7 +231,11 @@ class BDAcessPoint(Service):
 	def _register_patient(self, request:Request) -> Response:
 		sex = request.request_info["sex"]
 
+<<<<<<< Updated upstream
 		sql_query = "INSERT INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
+=======
+        patient_id = 0 # colocamos esse valor para substituir a req no BD (teste)
+>>>>>>> Stashed changes
 
 		sucess, patient, description = self.relational_querier.query(sql_query)
 
@@ -243,7 +247,19 @@ class BDAcessPoint(Service):
 	def _register_workflow(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
 
+<<<<<<< Updated upstream
 		sql_query = "INSERT INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
+=======
+        city = request.request_info["city"]
+
+        cities_matched = self._search_symptom_type(city)
+
+        if cities_matched is None:
+            self._cancel_all()
+            return request.create_response(sucess=False, response_data={"message": "City not found"})
+
+        city_id = cities_matched[0]["id"]
+>>>>>>> Stashed changes
 
 		sucess, _, description = self.relational_querier.query(sql_query)
 
@@ -268,10 +284,18 @@ class BDAcessPoint(Service):
 		initial = None
 		final = None
 
+<<<<<<< Updated upstream
 		if 'initial' in request.request_info:
 			initial = request.request_info["initial"]
 		if 'final' in request.request_info:
 			final = request.request_info["final"]
+=======
+
+
+    def _search_symptom_type(self, symptom_name:str) -> Union[List[Dict[str, str]], None]:
+        neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(symptom_name)        
+        sucess, symptoms_types = self.graph_querier.query(neo_query)
+>>>>>>> Stashed changes
 
 		sql_query = "SELECT * from Climate WHERE date BETWEEN {0} AND {1} ORDER BY date;".format(initial, final)
 		sucess, climates, description = self.relational_querier.query(sql_query)
@@ -288,6 +312,12 @@ class BDAcessPoint(Service):
 		if 'date' in request.request_info:
 			date = request.request_info["date"]
 
+<<<<<<< Updated upstream
+=======
+    def _get_symptoms_types(self, request:Request) -> Response:
+        neo_query = "MATCH (t:Tipo_Sintoma) RETURN t"
+        sucess, symptoms_types = self.graph_querier.query(neo_query)
+>>>>>>> Stashed changes
 
 		sql_query = "SELECT * from Climate WHERE date = {0} ORDER BY date;".format(date)
 		sucess, climates, description = self.relational_querier.query(sql_query)
