@@ -24,7 +24,11 @@ class Workflow(ABC):
 
         self._workflow_run()
 
-        self._send_bdap_request("register_workflow", {"workflow_name":self._workflow_name}, wait_for_response=False)
+        response = self._send_bdap_request("register_workflow", {"workflow_name":self._workflow_name}, wait_for_response=True)
+
+        if not response.sucess:
+            print("LOG WARNING (Workflow): Unable to register workflow")
+
 
     @abstractmethod
     def _workflow_run(self):
