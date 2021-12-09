@@ -55,7 +55,7 @@ class DataWorkflow(Service):
         if workflow_name not in workflows:
             return request.create_response(sucess=False, response_data={"message": "Workflow not recognised"})
 
-        workflow = workflows[workflow_name]()
+        workflow = workflows[workflow_name](self)
         
         try:
             workflow.run()

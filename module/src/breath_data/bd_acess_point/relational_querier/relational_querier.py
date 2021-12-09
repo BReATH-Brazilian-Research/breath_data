@@ -255,7 +255,7 @@ class RelationalQuerier(metaclass=Singleton):
 		self.conn.rollback()
 
 	def commit(self):
-	   self.conn.commit()
+		self.conn.commit()
 
 	def _close(self):
 		"""Close the database connection once the program is done with it.

@@ -17,12 +17,14 @@ class Workflow(ABC):
     def run(self, force_run = False):
 
         if not force_run:
-            response = self._send_bdap_request("is_workflow_runned", {"workflow_name":self._workflow_name})
+            response = self._send_bdap_request("is_workflow_runned", {"workflow_name":self._workflow_name}, wait_for_response=True)
 
             if response.sucess == True:
                 return
 
         self._workflow_run()
+
+        self._send_bdap_request("register_workflow", {"workflow_name":self._workflow_name}, wait_for_response=False)
 
     @abstractmethod
     def _workflow_run(self):

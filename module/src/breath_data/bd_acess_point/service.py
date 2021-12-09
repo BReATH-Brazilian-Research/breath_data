@@ -258,7 +258,7 @@ class BDAcessPoint(Service):
 		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = '{0}'".format(name)
 		sucess, workflows = self.relational_querier.query(sql_query)
 
-		if len(workflows) > 0 and workflows[0][1] != 0:
+		if sucess and len(workflows) > 0 and workflows[0][1] == 1:
 			return request.create_response(True)
 
 		return request.create_response(False)

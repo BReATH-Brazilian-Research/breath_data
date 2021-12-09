@@ -3,6 +3,7 @@ from typing import Dict
 from breath_api_interface.service_interface.service import Service
 from .workflow import Workflow
 import os
+import requests
 
 pandas_ids = {
                 "test_df":"1fAm2QY4dvucpLF_h9zG-xfOsJUXfVGhU",
@@ -63,12 +64,15 @@ class Downloader(Workflow):
 
     def _workflow_run(self):
         for file_name in self._file_dict:
+            print("LOG: Downloading "+file_name)
             file_id = self._file_dict[file_name]
 
             path = os.path.join(self._directory, file_name)
 
             download_file_from_google_drive(file_id, path)
 
-class BDDownloader(Workflow):
-    def __init__(self, workflow_service: Service, directory="..\\bd_acess_point\\relational_querier"):
-        super().__init__(workflow_service, workflow_service, "BDDownloader", bd_ids, directory)
+        print("LOG: Downloads ended with sucess")
+
+class BDDownloader(Downloader):
+    def __init__(self, workflow_service: Service, directory:str=""):
+        super().__init__(workflow_service, "BDDownloader", bd_ids, directory)
