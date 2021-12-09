@@ -25,6 +25,10 @@ dataset_dict_ids = {"dataset": "1f-JVuN-RhU8kpiDIehpJLJd9HWAcckMO"}
 
 bd_ids = {"breath.db": "1fJOI8FPe7VjvW8ZHcVW1wFW2f6FiJbQZ"}
 
+model_ids = {"model.h5": "1gAwoNEHGkbrTPE9gPYL_lyrEKrn_h4eI",
+            "target_dist.json":"1gKVDHr1tsEwuMRiFLCFQ8I_vJyHMG9hP",
+            "train_dist.json":"1gD00hqix88dKzvlzHVKQkNEx9H8inpZM"}
+
 # Download functions from https://stackoverflow.com/questions/38511444/python-download-files-from-google-drive-using-url
 
 def download_file_from_google_drive(id, destination):
@@ -76,3 +80,7 @@ class Downloader(Workflow):
 class BDDownloader(Downloader):
     def __init__(self, workflow_service: Service, directory:str=""):
         super().__init__(workflow_service, "BDDownloader", bd_ids, directory)
+
+class ModelDownloader(Downloader):
+    def __init__(self, workflow_service: Service, directory: str=""):
+        super().__init__(workflow_service, "ModelDownloader", model_ids, directory)

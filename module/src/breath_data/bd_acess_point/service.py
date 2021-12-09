@@ -301,6 +301,8 @@ class BDAcessPoint(Service):
 
 		if not sucess:
 			return request.create_response(False, {"message":"Unable to register workflow"})
+
+		self._commit_all()
 		
 		return request.create_response(True)
 

@@ -244,13 +244,16 @@ class RelationalQuerier(metaclass=Singleton):
 				self.c.execute(query, values)
 			else:
 				result = self.c.execute(query)
-				description = list(np.asarray(result.description)[:,0])
+			
+				if result.description is not None:
+					description = list(np.asarray(result.description)[:,0])
+
 				result = result.fetchall()
 			sucess = True
 			self.conn.commit()
 			return True, result, description
 		except Exception as e:
-			print("LOG:", e)
+			print("LOG WARNING (Relation Querier):", e)
 			return False, result, description
 
 	def cancel(self):
