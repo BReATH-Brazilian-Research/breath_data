@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3.dbapi2 import Cursor, Connection
 from typing import Dict, List, Tuple, Union
+import numpy as np
 
 ## SQLite3 datatypes
 ## 
@@ -235,19 +236,21 @@ class RelationalQuerier(metaclass=Singleton):
 		"""Executes the desired query and fetch its results if there is any
         """
 		result = None
+		description = None
 		try:
 			if values is not None:
 				values = tuple(values[1:])
 				self.c.execute(query, values)
 			else:
 				result = self.c.execute(query)
+				description = list(np.asarray(result.description)[:,0])
 				result = result.fetchall()
 			sucess = True
 			self.conn.commit()
-			return True, result
+			return True, result, description
 		except Exception as e:
 			print(e)
-			return False, result
+			return False, result, description
 
 	def cancel(self):
 		"""Close the database connection once the program is done with it.

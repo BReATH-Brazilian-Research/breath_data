@@ -72,12 +72,12 @@ class BDAcessPoint(Service):
 		city_name = request.request_info["city_name"]
 
 		query = "SELECT * FROM Casos_Dia WHERE ID_MUNICIP='{0}'".format(city_name)
-		sucess, result = self.relational_querier.query(query)
+		sucess, result, description = self.relational_querier.query(query)
 
 		if not sucess:
 			return request.create_response(False, {"message": "Relational Querier error."})
 
-		response = request.create_response(True, {"data":result})
+		response = request.create_response(True, {"data":result, "description":description})
 
 		return response
 
@@ -97,7 +97,7 @@ class BDAcessPoint(Service):
 
 		sql_query = "INSERT INTO Users(Nome, Idade, Genero) VALUES('{0}',{1},'{2}')".format(name, age, gender)
 
-		sucess, _ = self.relational_querier.query(sql_query)
+		sucess, _, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return request.create_response(sucess=False, response_data={"message":"Cannot create user"})
@@ -158,7 +158,7 @@ class BDAcessPoint(Service):
 		symptom_id = symptom[0]["id"]
 
 		sql_query3 = "INSERT INTO PacienteSintoma(Paciente, Sintoma) VALUES('{0}', '{1}')".format(patient_id, symptom_id)
-		sucess, _ = self.relational_querier.query(sql_query3)
+		sucess, _, description = self.relational_querier.query(sql_query3)
 
 		if not sucess:
 			self._cancel_all()
@@ -173,7 +173,7 @@ class BDAcessPoint(Service):
 		#sucess, symptoms_types = self.graph_querier.query(neo_query)
 
 		sql_query = "SELECT * from Sintomas WHERE Tipo = {0};".format(symptom_name)
-		sucess, symptoms_types = self.relational_querier.query(sql_query)
+		sucess, symptoms_types, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return None
@@ -182,7 +182,7 @@ class BDAcessPoint(Service):
 
 	def _search_user(self, user_id:int) -> Union[List[Dict[str, str]], None]:
 		sql_query = "SELECT * FROM Users WHERE Users.id = {0}".format(user_id)
-		sucess, users = self.relational_querier.query(sql_query)
+		sucess, users, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return None
@@ -194,7 +194,7 @@ class BDAcessPoint(Service):
 		#sucess, symptoms_types = self.graph_querier.query(neo_query)
 
 		sql_query = "SELECT Tipo from Sintomas GROUP BY Tipo;"
-		sucess, _ = self.relational_querier.query(sql_query)
+		sucess, _, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return Response(False, {"message":"Unable to access symptoms types"})
@@ -220,7 +220,7 @@ class BDAcessPoint(Service):
 
 		sql_query = "INSERT INTO Cidades(Id, Nome, UF) VALUES('{0}', '{1}', '{2}')".format(cod, nome, uf)
 
-		sucess, _ = self.relational_querier.query(sql_query)
+		sucess, _, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return request.create_response(False, {"message":"Unable to register city"})
@@ -233,7 +233,7 @@ class BDAcessPoint(Service):
 
 		sql_query = "INSERT INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
 
-		sucess, patient = self.relational_querier.query(sql_query)
+		sucess, patient, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return request.create_response(False, {"message":"Unable to register patient"})
@@ -245,7 +245,7 @@ class BDAcessPoint(Service):
 
 		sql_query = "INSERT INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
 
-		sucess, _ = self.relational_querier.query(sql_query)
+		sucess, _, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return request.create_response(False, {"message":"Unable to register workflow"})
@@ -256,7 +256,7 @@ class BDAcessPoint(Service):
 		name = request.request_info["workflow_name"]
 
 		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = '{0}'".format(name)
-		sucess, workflows = self.relational_querier.query(sql_query)
+		sucess, workflows, description = self.relational_querier.query(sql_query)
 
 		if sucess and len(workflows) > 0 and workflows[0][1] == 1:
 			return request.create_response(True)
@@ -274,7 +274,7 @@ class BDAcessPoint(Service):
 			final = request.request_info["final"]
 
 		sql_query = "SELECT * from Climate WHERE date BETWEEN {0} AND {1} ORDER BY date;".format(initial, final)
-		sucess, climates = self.relational_querier.query(sql_query)
+		sucess, climates, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return None
@@ -290,7 +290,7 @@ class BDAcessPoint(Service):
 
 
 		sql_query = "SELECT * from Climate WHERE date = {0} ORDER BY date;".format(date)
-		sucess, climates = self.relational_querier.query(sql_query)
+		sucess, climates, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return None
@@ -308,7 +308,7 @@ class BDAcessPoint(Service):
 			final = request.request_info["final"]
 
 		sql_query = "SELECT * from SRAG WHERE date BETWEEN {0} AND {1} ORDER BY date;".format(initial, final)
-		sucess, diagnostics = self.relational_querier.query(sql_query)
+		sucess, diagnostics, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return None
@@ -323,7 +323,7 @@ class BDAcessPoint(Service):
 			date = request.request_info["date"]
 
 		sql_query = "SELECT * from SRAG WHERE date = {0} ORDER BY date;".format(date)
-		sucess, diagnostics = self.relational_querier.query(sql_query)
+		sucess, diagnostics, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
 			return None
