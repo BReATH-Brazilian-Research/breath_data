@@ -8,6 +8,8 @@ from breath_api_interface.request import Request, Response
 
 from breath_data.bd_acess_point.relational_querier import RelationalQuerier
 from breath_data.bd_acess_point.graph_querier import GraphQuerier
+import pdb
+
 
 class BDAcessPoint(Service):
 	'''BReATH service for provide BD acess
@@ -128,7 +130,7 @@ class BDAcessPoint(Service):
 			age = request.request_info["age"]
 		if 'gender' in request.request_info:
 			gender = request.request_info["gender"]
-
+		#pdb.set_trace()
 		sql_query = "INSERT INTO Users(Nome, Idade, Genero) VALUES('{0}',{1},'{2}')".format(name, age, gender)
 
 		sucess, _, description = self.relational_querier.query(sql_query)
@@ -176,27 +178,33 @@ class BDAcessPoint(Service):
 
 		city = request.request_info["city"]
 
+		"""
 		cities_matched = self._search_city(city)
-
+		print(cities_matched)
+		#pbd.set_trace()
 		if cities_matched is None:
 			self._cancel_all()
 			return request.create_response(sucess=False, response_data={"message": "City not found"})
-
+		
+		#pbd.set_trace()
 		city_id = cities_matched[0]["id"]
-
-		sql_query = "INSERT INTO Sintomas(Tipo, Ano, Mês, Dia, Cidade)"
-		sql_query += " VALUES('{0}', '{1}', '{2}', '{3}', {4})".format(symptom_name, year, month, day, city_id)
-
-		sucess, symptom = self.relational_query.query(sql_query)
+		"""
+		city_id = city
+		#pdb.set_trace()
+		sql_query = "INSERT INTO Sintomas(Tipo, Ano, Mês, Dia, Cidade, Paciente)"
+		sql_query += " VALUES(?, ?, ?, ?, ?, ?)"#.format(symptom_name, year, month, day, city_id, patient_id)
+		#pdb.set_trace()
+		sucess, symptom, description = self.relational_querier.query(sql_query, [0, symptom_name, year, month, day, city_id, patient_id])
 
 		if not sucess:
 			self._cancel_all()
 			return request.create_response(sucess=False, response_data={"message":"Error while registering symptom"})
 
-		symptom_id = symptom[0]["id"]
+		print(symptom)
+		symptom_id = symptom
 
-		sql_query3 = "INSERT INTO PacienteSintoma(Paciente, Sintoma) VALUES('{0}', '{1}')".format(patient_id, symptom_id)
-		sucess, _, description = self.relational_querier.query(sql_query3)
+		sql_query3 = "INSERT INTO PacienteSintoma(Paciente, Sintoma) VALUES(?, ?)"#.format(patient_id, symptom_id)
+		sucess, _, description = self.relational_querier.query(sql_query3, [0, patient_id, symptom_id])
 
 		if not sucess:
 			self._cancel_all()
@@ -210,7 +218,11 @@ class BDAcessPoint(Service):
 		#neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(city)        
 		#sucess, symptoms_types = self.graph_querier.query(neo_query)
 
-		sql_query = "SELECT * from Cidades WHERE Nome = {0};".format(city)
+		
+		##pbd.set_trace()
+
+		sql_query = "SELECT * from Clima_Casos WHERE Clima_Casos.Nome_municipio = '{0}'".format(city)
+		
 		sucess, cities_matched, description = self.relational_querier.query(sql_query)
 
 		if not sucess:
@@ -268,7 +280,7 @@ class BDAcessPoint(Service):
 		nome = request.request_info["nome"]
 		cod = request.request_info["cod"]
 
-		sql_query = "INSERT INTO Cidades(Id, Nome, UF) VALUES('{0}', '{1}', '{2}')".format(cod, nome, uf)
+		sql_query = "INSERT INTO Cidades(Id, Nome_municipio, UF) VALUES('{0}', '{1}', '{2}')".format(cod, nome, uf)
 
 		sucess, _, description = self.relational_querier.query(sql_query)
 
@@ -297,7 +309,7 @@ class BDAcessPoint(Service):
 
 	def _register_workflow(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
-
+		##pbd.set_trace()
 		sql_query = "INSERT INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
 
 		sucess, _, description = self.relational_querier.query(sql_query)
@@ -309,7 +321,7 @@ class BDAcessPoint(Service):
 
 	def _is_workflow_runned(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
-
+		##pbd.set_trace()
 		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = '{0}'".format(name)
 		sucess, workflows, description = self.relational_querier.query(sql_query)
 
