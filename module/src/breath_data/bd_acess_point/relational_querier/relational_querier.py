@@ -1,6 +1,7 @@
 import sqlite3
 from sqlite3.dbapi2 import Cursor, Connection
 from typing import Dict, List, Tuple, Union
+import numpy as np
 
 ## SQLite3 datatypes
 ## 
@@ -47,18 +48,18 @@ class RelationalQuerier(metaclass=Singleton):
 			Id INTEGER PRIMARY KEY,
 			Diagnóstico TEXT)
 			""")	
-    
+
 		# create table Sintomas
 		self.c.execute(
 			"""
 			CREATE TABLE IF NOT EXISTS Sintomas(
 			Id INTEGER PRIMARY KEY,
 			Tipo TEXT,
-			Ano INTEGER,
-			Mês INTEGER,
-			Dia INTEGER,
+			Ano TEXT,
+			Mês TEXT,
+			Dia TEXT,
 			Cidade TEXT,
-			Paciente FOREIGN_KEY)
+			Paciente TEXT)
 			""")
 		
 		# create table Users
@@ -228,6 +229,7 @@ class RelationalQuerier(metaclass=Singleton):
 			)""")
 
 		self.conn.commit()
+		
 
 	def query(self, query:str, values:str = None) -> Tuple[bool, Union[List[Dict[str, str]], None]]:
 		if self.conn is None:
@@ -235,19 +237,24 @@ class RelationalQuerier(metaclass=Singleton):
 		"""Executes the desired query and fetch its results if there is any
         """
 		result = None
+		description = None
 		try:
 			if values is not None:
 				values = tuple(values[1:])
 				self.c.execute(query, values)
 			else:
 				result = self.c.execute(query)
+			
+				if result.description is not None:
+					description = list(np.asarray(result.description)[:,0])
+
 				result = result.fetchall()
 			sucess = True
 			self.conn.commit()
-			return True, result
+			return True, result, description
 		except Exception as e:
-			print(e)
-			return False, result
+			print("LOG WARNING (Relation Querier):", e)
+			return False, result, description
 
 	def cancel(self):
 		"""Close the database connection once the program is done with it.
@@ -255,7 +262,7 @@ class RelationalQuerier(metaclass=Singleton):
 		self.conn.rollback()
 
 	def commit(self):
-	   self.conn.commit()
+		self.conn.commit()
 
 	def _close(self):
 		"""Close the database connection once the program is done with it.

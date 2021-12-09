@@ -8,12 +8,18 @@ cache:
   paths:
     - .cache/pip
     - venv/
+    
+  only:
+    - main
 
 before_script:
   - python -V  # Print out python version for debugging
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
+  
+  only:
+    - main
 
 
 
@@ -31,3 +37,6 @@ build_main:
   artifacts: # documentos e arquivos que serao gerados
     paths:
       - public
+      
+  only:
+    - main
