@@ -151,7 +151,7 @@ class BDAcessPoint(Service):
 		city_id = cities_matched[0]["id"]
 
 		sql_query = "INSERT INTO Sintomas(Tipo, Ano, Mês, Dia, Cidade)"
-		sql_query += " VALUES('{0}', '{1}', '{2}', '{3}', {4})".format(symptom_type_id, year, month, day, city_id)
+		sql_query += " VALUES('{0}', '{1}', '{2}', '{3}', {4})".format(symptom_name, year, month, day, city_id)
 
 		sucess, symptom = self.relational_query.query(sql_query)
 
