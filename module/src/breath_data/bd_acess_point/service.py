@@ -37,7 +37,9 @@ class BDAcessPoint(Service):
 							"register_symptom_type": self._register_symptom_type,
 							"register_city": self._register_city,
 							"register_patient" : self._register_patient,
-							"get_casos" : self._get_casos
+							"get_casos" : self._get_casos,
+							"get_temperature": self._get_temperature,
+							"get_city": self._get_city,
 							}
 
 	
@@ -64,6 +66,21 @@ class BDAcessPoint(Service):
 		self.relational_querier.commit()
 		#self.graph_querier.commit()
 
+	def _get_city(self, request:Request) -> Response:
+		if "city_name" not in request.request_info:
+			return request.create_response(False, {"message":"Request must have city_name."})
+
+		city_name = request.request_info["city_name"]
+
+		query = "SELECT * FROM Cidades WHERE Nome_municipio='{0}'".format(city_name)
+		sucess, result, description = self.relational_querier.query(query)
+
+		if not sucess:
+			return request.create_response(False, {"message": "Relational Querier error."})
+
+		response = request.create_response(True, {"data":result, "description":description})
+		return response
+
 	def _get_casos(self, request:Request) -> Response:
 		
 		if "city_name" not in request.request_info:
@@ -81,7 +98,24 @@ class BDAcessPoint(Service):
 
 		return response
 
+	def _get_temperature(self, request:Request) -> Response:
+
+		if "city_name" not in request.request_info:
+			return request.create_response(False, {"message":"Request must have city_name."})
+
+		city_name = request.request_info["city_name"]
+
+		query = "SELECT DIA, Temp_max, Temp_min FROM Clima_Cidade WHERE Nome_municipio ='{0}'".format(city_name)
+
+		sucess, result, description = self.relational_querier.query(query)
+
+		if not sucess:
+			return request.create_response(False, {"message": "Relational Querier error."})
 	
+		response = request.create_response(True, {"data":result, "description":description})
+
+		return response
+
 	def _register_user(self, request:Request) -> Response:
 
 		name = None
