@@ -49,11 +49,6 @@ class RelationalQuerier(metaclass=Singleton):
 			Diagnóstico TEXT)
 			""")	
 
-		self.c.execute(
-			"""
-			DROP TABLE Sintomas
-			""")
-
 		# create table Sintomas
 		self.c.execute(
 			"""
@@ -234,7 +229,7 @@ class RelationalQuerier(metaclass=Singleton):
 			)""")
 
 		self.conn.commit()
-		print(self.c.execute('PRAGMA table_info(Sintomas)').fetchall())
+		
 
 	def query(self, query:str, values:str = None) -> Tuple[bool, Union[List[Dict[str, str]], None]]:
 		if self.conn is None:
@@ -256,7 +251,6 @@ class RelationalQuerier(metaclass=Singleton):
 			return True, result, description
 		except Exception as e:
 			print("LOG:", e)
-			print(query)
 			return False, result, description
 
 	def cancel(self):

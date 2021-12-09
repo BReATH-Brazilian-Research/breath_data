@@ -8,7 +8,6 @@ from breath_api_interface.request import Request, Response
 
 from breath_data.bd_acess_point.relational_querier import RelationalQuerier
 from breath_data.bd_acess_point.graph_querier import GraphQuerier
-import pdb
 
 
 class BDAcessPoint(Service):
@@ -130,7 +129,6 @@ class BDAcessPoint(Service):
 			age = request.request_info["age"]
 		if 'gender' in request.request_info:
 			gender = request.request_info["gender"]
-		#pdb.set_trace()
 		sql_query = "INSERT INTO Users(Nome, Idade, Genero) VALUES('{0}',{1},'{2}')".format(name, age, gender)
 
 		sucess, _, description = self.relational_querier.query(sql_query)
@@ -178,22 +176,11 @@ class BDAcessPoint(Service):
 
 		city = request.request_info["city"]
 
-		"""
-		cities_matched = self._search_city(city)
-		print(cities_matched)
-		#pbd.set_trace()
-		if cities_matched is None:
-			self._cancel_all()
-			return request.create_response(sucess=False, response_data={"message": "City not found"})
-		
-		#pbd.set_trace()
-		city_id = cities_matched[0]["id"]
-		"""
 		city_id = city
-		#pdb.set_trace()
+		
 		sql_query = "INSERT INTO Sintomas(Tipo, Ano, Mês, Dia, Cidade, Paciente)"
 		sql_query += " VALUES(?, ?, ?, ?, ?, ?)"#.format(symptom_name, year, month, day, city_id, patient_id)
-		#pdb.set_trace()
+		
 		sucess, symptom, description = self.relational_querier.query(sql_query, [0, symptom_name, year, month, day, city_id, patient_id])
 
 		if not sucess:
@@ -219,7 +206,6 @@ class BDAcessPoint(Service):
 		#sucess, symptoms_types = self.graph_querier.query(neo_query)
 
 		
-		##pbd.set_trace()
 
 		sql_query = "SELECT * from Clima_Casos WHERE Clima_Casos.Nome_municipio = '{0}'".format(city)
 		
@@ -309,7 +295,6 @@ class BDAcessPoint(Service):
 
 	def _register_workflow(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
-		##pbd.set_trace()
 		sql_query = "INSERT INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
 
 		sucess, _, description = self.relational_querier.query(sql_query)
@@ -321,7 +306,6 @@ class BDAcessPoint(Service):
 
 	def _is_workflow_runned(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
-		##pbd.set_trace()
 		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = '{0}'".format(name)
 		sucess, workflows, description = self.relational_querier.query(sql_query)
 
