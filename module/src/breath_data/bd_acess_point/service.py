@@ -18,7 +18,7 @@ class BDAcessPoint(Service):
 		:ivar graph_querier: Handles graph (Neo4j) queries
 		:type graph_querier: breath_data.bd_acess_point.graph_querier.GraphQuerier
 	'''
-	
+
 	def __init__(self, proxy:ServiceProxy, request_queue:Queue, global_response_queue:Queue):
 		'''BDAcessPoint constructor.
 
@@ -27,7 +27,7 @@ class BDAcessPoint(Service):
 		super().__init__(proxy, request_queue, global_response_queue, "BDAcessPoint")
 		self.relational_querier = RelationalQuerier()
 		self.graph_querier = GraphQuerier()
-
+		
 		self._operations : Dict[str, Callable[[BDAcessPoint, Request], Response]] = {
 							"register_symptom" : self._register_symptom,
 							"register_workflow": self._register_workflow,
@@ -48,7 +48,7 @@ class BDAcessPoint(Service):
 
 		if request is None:
 			return
-			
+
 		response : Response = request.create_response(sucess=False, response_data={"message": "Operation not available"})
 
 		if request.operation_name in self._operations:
@@ -81,7 +81,7 @@ class BDAcessPoint(Service):
 
 		return response
 
-
+	
 	def _register_user(self, request:Request) -> Response:
 
 		name = None
@@ -129,7 +129,7 @@ class BDAcessPoint(Service):
 
 		symptom_type_id = symptoms_types[0]["id"]
 
-		patient_id = 0
+		patient_id = 0 # colocamos esse valor para substituir a req no BD (teste)
 
 		if "patient_id" in request.request_info:
 			patient_id = request.request_info["patient_id"]
@@ -144,7 +144,15 @@ class BDAcessPoint(Service):
 			patient_id = users[0]["Paciente"]
 			city_id = users[0]["Cidade"]
 
-		city_id = request.request_info["city"]
+		city = request.request_info["city"]
+
+		cities_matched = self._search_city(city)
+
+		if cities_matched is None:
+			self._cancel_all()
+			return request.create_response(sucess=False, response_data={"message": "City not found"})
+
+		city_id = cities_matched[0]["id"]
 
 		sql_query = "INSERT INTO Sintomas(Tipo, Ano, Mês, Dia, Cidade)"
 		sql_query += " VALUES('{0}', '{1}', '{2}', '{3}', {4})".format(symptom_type_id, year, month, day, city_id)
@@ -167,6 +175,18 @@ class BDAcessPoint(Service):
 		self._commit_all()
 
 		return request.create_response(sucess=True)
+
+	def _search_city(self, city:str) -> Union[List[Dict[str, str]], None]:
+		#neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(city)        
+		#sucess, symptoms_types = self.graph_querier.query(neo_query)
+
+		sql_query = "SELECT * from Cidades WHERE Nome = {0};".format(city)
+		sucess, cities_matched, description = self.relational_querier.query(sql_query)
+
+		if not sucess:
+			return None
+
+		return cities_matched
 
 	def _search_symptom_type(self, symptom_name:str) -> Union[List[Dict[str, str]], None]:
 		#neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(symptom_name)        
@@ -199,13 +219,13 @@ class BDAcessPoint(Service):
 		if not sucess:
 			return Response(False, {"message":"Unable to access symptoms types"})
 		
-		return Response(True, {"symptoms_types":symptoms_types})
+		return Response(True, {"symptoms_types":sql_query})
 
 	# onde guardariamos tipo de sintoma no relacional?
 	def _register_symptom_type(self, request:Request) -> Response:
 		neo_query = "CREATE ({0}:Tipo_Sintoma)".format(request.request_info["symptom_name"])
 		sucess, _ = self.graph_querier.query(neo_query)
-		
+
 
 
 		if not sucess:
@@ -227,15 +247,16 @@ class BDAcessPoint(Service):
 		
 		return request.create_response(True)
 
+
+	def _get_symptoms_types(self, request:Request) -> Response:
+		neo_query = "MATCH (t:Tipo_Sintoma) RETURN t"
+		sucess, symptoms_types = self.graph_querier.query(neo_query)
+
 	# Teremos banco pacientes alem do banco de usurios?
 	def _register_patient(self, request:Request) -> Response:
 		sex = request.request_info["sex"]
 
-<<<<<<< Updated upstream
 		sql_query = "INSERT INTO Pacientes(Sexo) VALUES('{0}')".format(sex)
-=======
-        patient_id = 0 # colocamos esse valor para substituir a req no BD (teste)
->>>>>>> Stashed changes
 
 		sucess, patient, description = self.relational_querier.query(sql_query)
 
@@ -247,19 +268,7 @@ class BDAcessPoint(Service):
 	def _register_workflow(self, request:Request) -> Response:
 		name = request.request_info["workflow_name"]
 
-<<<<<<< Updated upstream
 		sql_query = "INSERT INTO Workflow(Nome, Executado) VALUES('{0}', 1)".format(name)
-=======
-        city = request.request_info["city"]
-
-        cities_matched = self._search_symptom_type(city)
-
-        if cities_matched is None:
-            self._cancel_all()
-            return request.create_response(sucess=False, response_data={"message": "City not found"})
-
-        city_id = cities_matched[0]["id"]
->>>>>>> Stashed changes
 
 		sucess, _, description = self.relational_querier.query(sql_query)
 
@@ -284,18 +293,10 @@ class BDAcessPoint(Service):
 		initial = None
 		final = None
 
-<<<<<<< Updated upstream
 		if 'initial' in request.request_info:
 			initial = request.request_info["initial"]
 		if 'final' in request.request_info:
 			final = request.request_info["final"]
-=======
-
-
-    def _search_symptom_type(self, symptom_name:str) -> Union[List[Dict[str, str]], None]:
-        neo_query = "MATCH (t:Tipo_Sintoma {{nome: {0}}}) RETURN t".format(symptom_name)        
-        sucess, symptoms_types = self.graph_querier.query(neo_query)
->>>>>>> Stashed changes
 
 		sql_query = "SELECT * from Climate WHERE date BETWEEN {0} AND {1} ORDER BY date;".format(initial, final)
 		sucess, climates, description = self.relational_querier.query(sql_query)
@@ -311,13 +312,6 @@ class BDAcessPoint(Service):
 
 		if 'date' in request.request_info:
 			date = request.request_info["date"]
-
-<<<<<<< Updated upstream
-=======
-    def _get_symptoms_types(self, request:Request) -> Response:
-        neo_query = "MATCH (t:Tipo_Sintoma) RETURN t"
-        sucess, symptoms_types = self.graph_querier.query(neo_query)
->>>>>>> Stashed changes
 
 		sql_query = "SELECT * from Climate WHERE date = {0} ORDER BY date;".format(date)
 		sucess, climates, description = self.relational_querier.query(sql_query)
