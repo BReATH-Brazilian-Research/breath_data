@@ -36,9 +36,11 @@ class BDAcessPoint(Service):
 							"get_symptoms_types" : self._get_symptoms_types,
 							"register_symptom_type": self._register_symptom_type,
 							"register_city": self._register_city,
-							"register_patient" : self._register_patient
+							"register_patient" : self._register_patient,
+							"get_casos" : self._get_casos
 							}
-		
+
+	
 	def run(self) -> None:
 		'''Run the service, handling BD requests.
 		'''
@@ -61,6 +63,24 @@ class BDAcessPoint(Service):
 	def _commit_all(self):
 		self.relational_querier.commit()
 		#self.graph_querier.commit()
+
+	def _get_casos(self, request:Request) -> Response:
+		
+		if "city_name" not in request.request_info:
+			return request.create_response(False, {"message":"Request must have city_name."})
+
+		city_name = request.request_info["city_name"]
+
+		query = "SELECT * FROM Casos_Dia WHERE ID_MUNICIP='{0}'".format(city_name)
+		sucess, result = self.relational_querier.query(query)
+
+		if not sucess:
+			return request.create_response(False, {"message": "Relational Querier error."})
+
+		response = request.create_response(True, {"data":result})
+
+		return response
+
 
 	def _register_user(self, request:Request) -> Response:
 
@@ -238,7 +258,7 @@ class BDAcessPoint(Service):
 		sql_query = "SELECT * FROM Workflow WHERE Workflow.Nome = '{0}'".format(name)
 		sucess, workflows = self.relational_querier.query(sql_query)
 
-		if len(workflows) > 0 and workflows[0][1] != 0:
+		if sucess and len(workflows) > 0 and workflows[0][1] == 1:
 			return request.create_response(True)
 
 		return request.create_response(False)
